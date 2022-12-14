@@ -1,14 +1,16 @@
 {% load static %}
-      <!--  BEGIN SIDEBAR  -->
+      {% block sidebar %}
       <div class="sidebar-wrapper sidebar-theme">
         <nav id="sidebar">
           <div class="navbar-nav theme-brand flex-row text-center">
             <div class="nav-logo">
               <div class="nav-item theme-logo">
-                <a href="./index.html">
+                <a
+                  href="javascript:void(0);"
+                >
                   <img
-                    src="../src/assets/img/logo.svg"
-                    class="navbar-logo"
+                    src="{% static 'src/assets/img/logo.svg' %}"
+                    class="flag-width"
                     alt="logo"
                   />
                 </a>
@@ -112,13 +114,13 @@
                   class="feather feather-minus"
                 >
                   <line x1="5" y1="12" x2="19" y2="12"></line></svg
-                ><span>APPLICATIONS</span>
+                ><span>DATASETS</span>
               </div>
             </li>
 
             <li class="menu">
               <a
-                href="./app-calendar.html"
+                href="{% url 'brand-page' %}"
                 aria-expanded="false"
                 class="dropdown-toggle"
               >
@@ -147,7 +149,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
-                  <span>Calendar</span>
+                  <span>Brand</span>
                 </div>
               </a>
             </li>
@@ -1652,4 +1654,4 @@
           </ul>
         </nav>
       </div>
-      <!--  END SIDEBAR  -->
+      {% endblock sidebar %}
