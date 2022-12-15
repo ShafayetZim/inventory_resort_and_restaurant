@@ -73,9 +73,9 @@ def manage_brand(request, pk=None):
     context['title'] = 'Manage Brand'
     context['nav_bar'] = 'manage_brand'
     if pk is None:
-        context['brands'] = {}
+        context['brand'] = {}
     else:
-        context['brands'] = models.Brand.objects.get(id=pk)
+        context['brand'] = models.Brand.objects.get(id=pk)
 
     return render(request, 'manage_brand.html', context)
 
@@ -131,9 +131,9 @@ def manage_package(request, pk=None):
     context['title'] = 'Manage Package'
     context['nav_bar'] = 'manage_package'
     if pk is None:
-        context['packages'] = {}
+        context['package'] = {}
     else:
-        context['packages'] = models.Package.objects.get(id=pk)
+        context['package'] = models.Package.objects.get(id=pk)
 
     return render(request, 'manage_package.html', context)
 
@@ -189,9 +189,9 @@ def manage_unit_set(request, pk=None):
     context['title'] = 'Manage Unit Set'
     context['nav_bar'] = 'manage_unit_set'
     if pk is None:
-        context['unit_sets'] = {}
+        context['unit_set'] = {}
     else:
-        context['unit_sets'] = models.UnitSet.objects.get(id=pk)
+        context['unit_set'] = models.UnitSet.objects.get(id=pk)
 
     return render(request, 'manage_unit_set.html', context)
 
@@ -247,9 +247,9 @@ def manage_unit_value(request, pk=None):
     context['title'] = 'Manage Unit Value'
     context['nav_bar'] = 'manage_unit_value'
     if pk is None:
-        context['unit_values'] = {}
+        context['unit_value'] = {}
     else:
-        context['unit_values'] = models.UnitValue.objects.get(id=pk)
+        context['unit_value'] = models.UnitValue.objects.get(id=pk)
 
     return render(request, 'manage_unit_value.html', context)
 
@@ -260,7 +260,7 @@ def delete_unit_value(request, pk):
         models.UnitValue.objects.filter(pk=instance.pk).delete()
         instance.delete()
         messages.add_message(request, messages.SUCCESS, 'Unit value has been deleted successfully.')
-        return redirect('brand-page')
+        return redirect('unit-value-page')
 
 
 def product(request):
@@ -305,9 +305,9 @@ def manage_product(request, pk=None):
     context['title'] = 'Manage Product'
     context['nav_bar'] = 'manage_product'
     if pk is None:
-        context['products'] = {}
+        context['product'] = {}
     else:
-        context['products'] = models.Product.objects.get(id=pk)
+        context['product'] = models.Product.objects.get(id=pk)
 
     return render(request, 'manage_product.html', context)
 
@@ -326,9 +326,9 @@ def view_product(request, pk=None):
     context['title'] = 'Product View'
     context['nav_bar'] = 'product_view'
     if pk is None:
-        context['products'] = {}
+        context['product'] = {}
     else:
-        context['products'] = models.Product.objects.get(id=pk)
+        context['product'] = models.Product.objects.get(id=pk)
 
     return render(request, 'view_product', context)
 
