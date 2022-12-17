@@ -246,6 +246,7 @@ def manage_unit_value(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Unit Value'
     context['nav_bar'] = 'manage_unit_value'
+    context['unit_sets'] = models.UnitSet.objects.all()
     if pk is None:
         context['unit_value'] = {}
     else:

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageStyles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/table/datatable/datatables.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/table/datatable/dt-global_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/table/datatable/custom_dt_custom.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/dark/table/datatable/dt-global_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/dark/table/datatable/custom_dt_custom.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/animate/animate.css' %}" />
+{% endblock pageStyles %}
+
+{% block content %}
+    <div class="layout-px-spacing">
+        <div class="middle-content container-xxl p-0">
+
+            <!-- BREADCRUMB -->
+            <div class="page-meta">
+                <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Dataset</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Unit Value List</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- /BREADCRUMB -->
+
+            <div class="seperator-header">
+                <a href="{% url 'manage-unit-value' %}"><button class="btn btn-secondary me-4 mt-2">Add Unit Value (+)<i data-feather="plus-circle"></i></button></a>
+            </div>
+
+            <div class="row layout-spacing">
+                <div class="col-lg-12">
+                    <div class="statbox widget box box-shadow">
+                        <div class="widget-content widget-content-area">
+                            <table id="style-3" class="table style-3 dt-table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="checkbox-column text-center"> Record Id </th>
+                                        <th>Unit Set</th>
+                                        <th>Unit Value</th>
+                                        <th class="text-center dt-no-sorting">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in unit_values %}
+                                    <tr>
+                                        <td class="checkbox-column text-center">{{ forloop.counter }}</td>
+                                        <td>{{ item.unit }}</td>
+                                        <td>{{ item.value }}</td>
+                                        <td class="text-center">
+                                            <ul class="table-controls">
+                                                <li><a href="{% url 'manage-unit-value-pk' item.pk %}" class="bs-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-original-title="Edit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 p-1 br-8 mb-1"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a></li>
+                                                <li><a href="javascript:void(0);" class="bs-tooltip" data-bs-toggle="modal" data-bs-target="#exampleModal{{item.id}}" data-bs-placement="top" title="Delete" data-original-title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash p-1 br-8 mb-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Delete Unit value</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                      <svg> ... </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="modal-text">Are you sure to delete <span style="color: red"> {{item.value}}</span> ? This process can't be undone.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn btn-light-dark" data-bs-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>
+                                                    <a href="{% url 'delete-unit-value' item.pk %}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/assets/js/custom.js' %}"></script>
+    <script src="{% static 'src/plugins/src/table/datatable/datatables.js' %}"></script>
+
+    <script>
+        // var e;
+
+        c3 = $('#style-3').DataTable({
+            "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
+        "<'table-responsive'tr>" +
+        "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search...",
+               "sLengthMenu": "Results :  _MENU_",
+            },
+            "stripeClasses": [],
+            "lengthMenu": [5, 10, 20, 50],
+            "pageLength": 10
+        });
+
+        multiCheck(c3);
+    </script>
+{% endblock pageScripts %}
