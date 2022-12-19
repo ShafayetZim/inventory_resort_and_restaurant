@@ -107,7 +107,7 @@ class SaveProduct(forms.ModelForm):
     sell_price = forms.CharField(max_length=10)
 
     class Meta:
-        models = models.Product
+        model = models.Product
         fields = ('name', 'code', 'brand', 'unit_set', 'unit_value', 'package', 'buy_price', 'sell_price',)
 
     def clean_code(self):
