@@ -305,6 +305,10 @@ def manage_product(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Product'
     context['nav_bar'] = 'manage_product'
+    context['brands'] = models.Brand.objects.all()
+    context['packages'] = models.Package.objects.all()
+    context['unit_sets'] = models.UnitSet.objects.all()
+    context['unit_values'] = models.UnitValue.objects.all()
     if pk is None:
         context['product'] = {}
     else:
