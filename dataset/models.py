@@ -39,7 +39,7 @@ class UnitValue(models.Model):
     value = models.CharField(max_length=10)
 
     def __str__(self):
-        return str(f"{self.unit.name} - {self.value}")
+        return str(f"{self.value}")
 
     class Meta:
         verbose_name_plural = "Unit Value"
@@ -49,8 +49,8 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50)
     brand = models.ForeignKey(Brand, on_delete=models.DO_NOTHING, related_name="brand_fk")
-    unit_set = models.ForeignKey(UnitSet, on_delete=models.DO_NOTHING, related_name="unit_fk2")
-    unit_value = models.ForeignKey(UnitValue, on_delete=models.DO_NOTHING, related_name="value_fk")
+    unit = models.ForeignKey(UnitSet, on_delete=models.DO_NOTHING, related_name="unit_fk2")
+    value = models.ForeignKey(UnitValue, on_delete=models.DO_NOTHING, related_name="value_fk")
     package = models.ForeignKey(Package, on_delete=models.DO_NOTHING, related_name="package_fk")
     buy_price = models.FloatField(max_length=10)
     sell_price = models.FloatField(max_length=10)
@@ -58,7 +58,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(f"{self.name} - {self.unit_value} - {self.unit_set}")
+        return str(f"{self.name}")
 
     class Meta:
         verbose_name_plural = "Product Set"
