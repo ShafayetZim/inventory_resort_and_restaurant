@@ -94,11 +94,11 @@ class SaveProduct(forms.ModelForm):
     brand = forms.Select(
         attrs={'class': 'form-control form-control-sm rounded-0', 'value': '', 'id': 'id_brand'}
     )
-    unit_set = forms.Select(
-        attrs={'class': 'form-control form-control-sm rounded-0', 'value': '', 'id': 'id_unit_set'}
+    unit = forms.Select(
+        attrs={'class': 'form-control form-control-sm rounded-0', 'value': '', 'id': 'id_unit'}
     )
-    unit_value = forms.Select(
-        attrs={'class': 'form-control form-control-sm rounded-0', 'value': '', 'id': 'id_unit_value'}
+    value = forms.Select(
+        attrs={'class': 'form-control form-control-sm rounded-0', 'value': '', 'id': 'id_value'}
     )
     package = forms.Select(
         attrs={'class': 'form-control form-control-sm rounded-0', 'value': '', 'id': 'id_package'}
@@ -108,7 +108,7 @@ class SaveProduct(forms.ModelForm):
 
     class Meta:
         model = models.Product
-        fields = ('name', 'code', 'brand', 'unit_set', 'unit_value', 'package', 'buy_price', 'sell_price',)
+        fields = ('name', 'code', 'brand', 'unit', 'value', 'package', 'buy_price', 'sell_price',)
 
     def clean_code(self):
         id = self.data['id'] if (self.data['id']).isnumeric() else 0
