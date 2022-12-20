@@ -37,5 +37,6 @@ urlpatterns = [
     path('manage_product/<int:pk>', views.manage_product, name='manage-product-pk'),
     path('save_product', views.save_product, name='save-product'),
     path('delete_product/<int:pk>', views.delete_product, name='delete-product'),
-    path('view_product/<int:pk>', views.view_product, name='view-product-pk')
+    path('view_product/<int:pk>', views.view_product, name='view-product-pk'),
+    path('ajax/load-unit/', views.load_unit, name='ajax_load_unit'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
