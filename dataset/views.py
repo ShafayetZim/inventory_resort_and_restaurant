@@ -337,3 +337,11 @@ def view_product(request, pk=None):
 
     return render(request, 'view_product', context)
 
+
+def load_unit(request):
+    unit_id = request.GET.get('unit')
+    values = models.UnitValue.objects.filter(unit_id=unit_id).order_by('value')
+    context = {'values': values}
+    return render(request, 'dropdown_unit.html', context)
+
+
