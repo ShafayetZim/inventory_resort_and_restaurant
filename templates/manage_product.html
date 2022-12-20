@@ -37,7 +37,7 @@
                                     </div>
                                 </div>
                                 <div class="widget-content widget-content-area text-center">
-                                    <form action="" id="product-form">
+                                    <form action="" id="product-form" data-unit-url="{% url 'ajax_load_unit' %}" novalidate>
                                         <input type="hidden" name="id" value="{{product.id}}" />
                                         <div class="row">
                                             <div class="col text-start">
@@ -80,9 +80,9 @@
                                         <div class="row">
                                             <div class="col text-start">
                                                 <label for="unit" class="form-label ">Unit Set</label>
-                                                <select id="unit" name="unit_set" class="form-select form-select-lg">
-                                                    {% if product.unit_set %}
-                                                    <option selected value="{{product.unit_set.pk}}">{{product.unit_set}}</option>
+                                                <select id="unit" name="unit" class="form-select form-select-lg">
+                                                    {% if product.unit %}
+                                                    <option selected value="{{product.unit.pk}}">{{product.unit}}</option>
                                                     {% endif %}
                                                     <option value="">Choose...</option>
                                                     {% for item in unit_sets %}
@@ -92,9 +92,9 @@
                                             </div>
                                             <div class="col text-start">
                                                 <label for="value" class="form-label">Unit Value</label>
-                                                <select id="value" name="unit_value" class="form-select form-select-lg">
-                                                    {% if product.unit_value %}
-                                                    <option selected value="{{product.unit_value.pk}}">{{product.unit_value}}</option>
+                                                <select id="value" name="value" class="form-select form-select-lg">
+                                                    {% if product.value %}
+                                                    <option selected value="{{product.value.pk}}">{{product.value}}</option>
                                                     {% endif %}
                                                     <option value="">Choose...</option>
                                                     {% for item in unit_values %}
@@ -195,14 +195,6 @@
             }
         });
 
-        new TomSelect("#value",{
-            create: false,
-            sortField: {
-                field: "text",
-                direction: "asc",
-            }
-        });
-
         new TomSelect("#brand",{
             create: false,
             sortField: {
@@ -218,5 +210,31 @@
                 direction: "asc",
             }
         });
+
+        // this one is for fetching unit value data
+        $("#unit").change(function () {
+          var url = $("#product-form").attr("data-unit-url");
+          var unitId = $(this).val();
+
+          $.ajax({
+            url: '{% url 'ajax_load_unit' %}',
+            data: {
+              'unit': unitId
+            },
+            success: function (data) {
+              $("#value").html(data);
+
+              // select box
+              new TomSelect("#value",{
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc",
+                }
+              });
+            }
+          });
+
+        })
     </script>
 {% endblock pageScripts %}
