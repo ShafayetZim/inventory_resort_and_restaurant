@@ -1,0 +1,12 @@
+<option value="">---------</option>
+{% for product in products %}
+<option
+  value="{{ product.pk }}"
+  data-buy="{{product.buy}}"
+  data-price="{{product.price}}"
+  data-available="{{product.available}}"
+  data-brand ="{{product.brand}}"
+>
+  {{ product.name }}
+</option>
+{% endfor %}
