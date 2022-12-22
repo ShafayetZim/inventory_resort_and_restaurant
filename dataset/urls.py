@@ -39,4 +39,12 @@ urlpatterns = [
     path('delete_product/<int:pk>', views.delete_product, name='delete-product'),
     path('view_product/<int:pk>', views.view_product, name='view-product-pk'),
     path('ajax/load-unit/', views.load_unit, name='ajax_load_unit'),
+    # crud urls for purchase
+    path('purchase', views.purchase, name='purchase-page'),
+    path('manage_purchase', views.manage_purchase, name='manage-purchase'),
+    path('manage_purchase/<int:pk>', views.manage_purchase, name='manage-purchase-pk'),
+    path('save_purchase', views.save_purchase, name='save-purchase'),
+    path('delete_purchase/<int:pk>', views.delete_purchase, name='delete-purchase'),
+    path('view_purchase', views.view_purchase, name='view-purchase'),
+    path('view_purchase/<int:pk>', views.view_purchase, name='view-purchase-pk'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

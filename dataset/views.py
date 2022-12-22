@@ -345,3 +345,82 @@ def load_unit(request):
     return render(request, 'dropdown_unit.html', context)
 
 
+def purchase(request):
+    context = context_data(request)
+    context['title'] = 'Purchase'
+    context['nav_bar'] = 'purchase_list'
+    context['purchase'] = models.PurchaseSet.objects.order_by('-date_added').all()
+    return render(request, 'ecommerce/purchase.html', context)
+
+
+def save_purchase(request):
+    resp = {'status': 'failed', 'msg': '', 'id': ''}
+    if request.method == 'POST':
+        post = request.POST
+        if not post['id'] == '':
+            purchase = models.PurchaseSet.objects.get(id=post['id'])
+            form = forms.SavePurchase(request.POST, instance=purchase)
+        else:
+            form = forms.SavePurchase(request.POST)
+        if form.is_valid():
+            form.save()
+            if post['id'] == '':
+                messages.success(request, "Purchase has been saved successfully.")
+                pid = models.PurchaseSet.objects.last().id
+                resp['id'] = pid
+            else:
+                messages.success(request, "Purchase has been updated successfully.")
+                resp['id'] = post['id']
+            resp['status'] = 'success'
+        else:
+            for field in form:
+                for error in field.errors:
+                    if not resp['msg'] == '':
+                        resp['msg'] += str('<br/>')
+                    resp['msg'] += str(f'[{field.name}] {error}')
+    else:
+        resp['msg'] = "There's no data sent on the request"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+def manage_purchase(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'Manage Purchase'
+    context['nav_bar'] = 'manage_purchase'
+    context['products'] = models.Product.objects.all()
+
+    if pk is None:
+        context['purchase'] = {}
+        context['pitems'] = {}
+    else:
+        context['purchase'] = models.PurchaseSet.objects.get(id=pk)
+        context['pitems'] = models.PurchaseItem.objects.filter(purchase__id=pk).all()
+
+    return render(request, 'ecommerce/manage_purchase.html', context)
+
+
+def view_purchase(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'View Purchase'
+    context['nav_bar'] = 'view_purchase'
+
+    if pk is None:
+        context['purchase'] = {}
+        context['pitems'] = {}
+    else:
+        context['purchase'] = models.PurchaseSet.objects.get(id=pk)
+        context['pitems'] = models.PurchaseItem.objects.filter(purchase__id=pk).all()
+
+    return render(request, 'ecommerce/view_purchase.html', context)
+
+
+def delete_purchase(request, pk):
+    if request.method == 'GET':
+        instance = models.PurchaseSet.objects.get(pk=pk)
+        models.PurchaseSet.objects.filter(pk=instance.pk).delete()
+        instance.delete()
+        messages.add_message(request, messages.SUCCESS, 'Purchase Set has been deleted successfully.')
+        return redirect('purchase-page')
+
+
