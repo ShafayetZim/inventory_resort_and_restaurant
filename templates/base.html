@@ -24,6 +24,10 @@
       rel="stylesheet"
       type="text/css"
     />
+    <link
+      rel="stylesheet"
+      href="{% static 'assets/select2/dist/css/select2.min.css' %}"
+    />
     <script src="{% static 'layouts/modern-dark-menu/loader.js' %}"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link
@@ -46,6 +50,11 @@
       type="text/css"
     />
     <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!-- BEGIN GLOBAL MANDATORY JS -->
+    <script src="{% static 'assets/default/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/select2/dist/js/select2.min.js' %}"></script>
+    <!-- END GLOBAL MANDATORY JS -->
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     {% block pageStyles %}
@@ -378,7 +387,7 @@
     <!-- END MAIN CONTAINER -->
 
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-    <script src="{% static 'src/plugins/src/global/vendors.min.js' %}"></script>
+<!--    <script src="{% static 'src/plugins/src/global/vendors.min.js' %}"></script>-->
     <script src="{% static 'src/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'src/plugins/src/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
     <script src="{% static 'src/plugins/src/mousetrap/mousetrap.min.js' %}"></script>
