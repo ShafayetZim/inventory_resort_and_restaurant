@@ -602,7 +602,7 @@ body.dark .form-select {
   transition: none;
 }
 body.dark .form-select.form-select-lg {
-  font-size: 19px;
+  font-size: 15px;
   padding: 11px 20px;
 }
 body.dark .form-select.form-select-sm {
