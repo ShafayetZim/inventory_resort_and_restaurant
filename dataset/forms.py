@@ -176,3 +176,59 @@ class SavePurchase(forms.ModelForm):
         except Exception as err:
             print(err)
             return False
+
+
+class SaveSale(forms.ModelForm):
+    code = forms.CharField(max_length=50)
+    client = forms.CharField(max_length=2)
+    status = forms.CharField(max_length=3)
+    total_amount = forms.CharField(max_length=10)
+    paid = forms.CharField(max_length=10)
+    due = forms.CharField(max_length=10)
+
+    class Meta:
+        model = models.SellSet
+        fields = ('code', 'client', 'status', 'total_amount', 'paid', 'due',)
+
+    def clean_code(self):
+        code = self.cleaned_data['code']
+
+        if code == 'generate':
+            pref = datetime.datetime.now().strftime('%y%m%d')
+            code = 1
+            while True:
+                try:
+                    check = models.SellSet.objects.get(code=f"{pref}{code:03d}")
+                    code = code + 1
+                except:
+                    return f"{pref}{code:02}"
+                    break
+        else:
+            return code
+
+    def save(self):
+        instance = self.instance
+        Products = []
+
+        if 'product_id[]' in self.data:
+            for k, val in enumerate(self.data.getlist('product_id[]')):
+                product = models.Product.objects.get(id=val)
+                unit = self.data.getlist('product_unit[]')[k]
+                price = self.data.getlist('product_price[]')[k]
+                qty = self.data.getlist('product_quantity[]')[k]
+                total = float(price) * float(qty)
+
+                try:
+                    Products.append(models.SellItem(sell=instance, product=product, unit_value=unit, price=price, quantity=qty, total_amount=total))
+                    print("Sell Items..")
+                except Exception as err:
+                    print(err)
+                    return False
+
+        try:
+            instance.save()
+            models.SellItem.objects.filter(sell=instance).delete()
+            models.SellItem.objects.bulk_create(Products)
+        except Exception as err:
+            print(err)
+            return False
