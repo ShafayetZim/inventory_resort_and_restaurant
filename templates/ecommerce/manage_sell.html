@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block pageStyles %}
+    <link rel="{% static 'stylesheet" href="src/plugins/src/font-icons/fontawesome/css/regular.css' %}">
+    <link rel="{% static 'stylesheet" href="src/plugins/src/font-icons/fontawesome/css/fontawesome.css' %}">
+
+    <link href="{% static 'src/assets/css/light/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/light/components/font-icons.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'src/assets/css/dark/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/components/font-icons.css' %}" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="container">
+                <div class="container">
+
+                    <!-- BREADCRUMB -->
+                    <div class="page-meta">
+                        <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Sell</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- /BREADCRUMB -->
+
+                    <div class="row mt-2">
+
+                        <div id="flFormsGrid" class="col-lg-12 layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Add Sell</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content widget-content-area text-center">
+                                    <form action="" id="sell-form">
+                                        <input type="hidden" name="id" value="{{sale.id}}">
+                                        <input type="hidden" name="code" value="{% if sale.code  %}{{sale.code}}{% else %}generate{% endif %}">
+                                        <input type="hidden" name="status" value="{% if sale.status  %}{{sale.status}}{% else %}0{% endif %}">
+                                        <input type="hidden" name="total_amount" value="{% if sale.total_amount  %}{{sale.total_amount}}{% else %}0{% endif %}">
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="card-title py-1">Transaction Details</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    {% if sale.code %}
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                            <label class="control-label">Transaction Code</label>
+                                                            <div class="h5"><b>{{sale.code}}</b></div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="card-title py-1">Sell Item List</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row align-items-end text-start">
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <label for="products" class="control-label">Products</label>
+                                                            <select id="products" class="form-control form-control-sm">
+                                                                <option value="" disabled selected></option>
+                                                                {% for product in products %}
+
+                                                                <option value="{{product.pk}}" data-buy = "{{product.buy}}" data-price = "{{product.price}}" data-available = "{{product.available}}" data-brand="{{product.brand}}">{{product.name}}</option>
+
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <button class="btn btn-primary btn-sm bg-gradient bg-primary" type="button" id="add_product"><i class="fa fa-plus"></i> Add Product</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clear-fix mt-2"></div>
+                                                    <table class="table table-bordered" id="product_list">
+                                                        <colgroup>
+                                                            <col width="5%">
+                                                            <col width="25%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                            <col width="10%">
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="p-1 text-center"></th>
+                                                                <th class="p-1 text-center">Product Name</th>
+                                                                <th class="p-1 text-center">Buy Price</th>
+                                                                <th class="p-1 text-center">Unit Price</th>
+                                                                <th class="p-1 text-center">Available</th>
+                                                                <th class="p-1 text-center">Quantity</th>
+                                                                <th class="p-1 text-center">Free</th>
+                                                                <th class="p-1 text-center">Good</th>
+                                                                <th class="p-1 text-center">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for pitem in pitems %}
+                                                            <tr>
+                                                                <td class="px-2 py-1 align-middle text-center">
+                                                                    <input type="hidden" name="product_id[]" value="{{pitem.product.id}}">
+                                                                    <input type="hidden" name="product_buy[]" value="{{pitem.buy}}">
+                                                                    <input type="hidden" name="product_brand[]" value="{{pitem.brand}}">
+                                                                    <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i class="fa fa-times"></i></button>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle product_type">{{pitem.product.name}}</td>
+                                                                <td class="px-2 py-1 align-middle text-end product_buy">{{pitem.buy|floatformat}}</td>
+                                                                <td class="px-2 py-1 align-middle text-end">
+                                                                    <input type="number" step="0.01" name="product_price[]" value="{{pitem.price}}">
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle text-end  product_available">{{pitem.available}}</td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="number" min="1" value="{{pitem.quantity|floatformat}}" class="form-control form-control-sm text-center" name="product_quantity[]" required>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="number" min="0" value="{{pitem.free_quantity|floatformat}}" class="form-control form-control-sm text-center" name="product_free_quantity[]" required>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="number" min="0" value="{{pitem.good_quantity|floatformat}}" class="form-control form-control-sm text-center" name="product_good_quantity[]" required>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle product_total text-end">{{pitem.total_amount|floatformat}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th class="text-center" colspan="8">Total</th>
+                                                                <th class="text-end sub-total-product">0.00</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Grand Total:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <h4 class="fw-bolder pe-2 gtotal">{% if sale.total_amount %}{{sale.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Extra Amount:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="extra_amount" name="extra" value="{% if sale.extra %}{{sale.extra|floatformat:2}}{% else %}0{% endif %}" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Paid Amount:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="tendered_amount" name="tendered" value="{% if sale.tendered %}{{sale.tendered|floatformat:2}}{% else %}0{% endif %}" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Due Amount:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="cost_amount" name="cost" value="{% if sale.cost %}{{sale.cost|floatformat:2}}{% else %}0{% endif %}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer py-1 text-center">
+                                                <button class="btn btn-primary btn-sm" type="button" id="pay_later">Pay Later</button>
+                                                <button class="btn btn-success btn-sm" id="sale-submit-btn" form="sell-form"><i class="fa fa-save"></i> Pay Now</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+<noscript id="product-clone">
+    <tr>
+        <td class="px-2 py-1 align-middle text-center">
+            <input type="hidden" name="product_id[]" value="">
+            <input type="hidden" name="product_buy[]" value="">
+            <input type="hidden" name="product_brand[]" value="">
+            <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i class="fa fa-times"></i></button>
+        </td>
+        <td class="px-2 py-1 align-middle product_type"></td>
+        <td class="px-2 py-1 align-middle text-end product_buy">0.00</td>
+        <td class="px-2 py-1 align-middle text-end">
+            <input type="number" step="0.01" name="product_price[]" value="">
+        </td>
+        <td class="px-2 py-1 align-middle text-end product_available"></td>
+        <td class="px-2 py-1 align-middle">
+            <input type="number" min="1" value="1" class="form-control form-control-sm text-center" name="product_quantity[]" required>
+        </td>
+        <td class="px-2 py-1 align-middle">
+            <input type="number" min="0" value="0" class="form-control form-control-sm text-center" name="product_free_quantity[]" required>
+        </td>
+        <td class="px-2 py-1 align-middle">
+            <input type="number" min="0" value="0" class="form-control form-control-sm text-center" name="product_good_quantity[]" required>
+        </td>
+        <td class="px-2 py-1 align-middle product_total text-end">0.00</td>
+    </tr>
+</noscript>
+
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/plugins/src/highlight/highlight.pack.js' %}"></script>
+    <script src="{% static 'src/assets/js/scrollspyNav.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/tomSelect/tom-select.base.js' %}"></script>
+    <script src="{% static 'src/plugins/src/tomSelect/custom-tom-select.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/font-icons/feather/feather.min.js' %}"></script>
+
+    <script>
+        function calc_total() {
+            var sub_product = 0
+            var gtotal = 0
+
+            $('#product_list tbody tr').each(function() {
+                var buy = $(this).find('[name="product_buy[]"]').val()
+                var price = $(this).find('[name="product_price[]"]').val()
+                var max = $(this).find('[name="product_available[]"]').val()
+                var qty = $(this).find('[name="product_quantity[]"]').val()
+                var free = $(this).find('[name="product_free_quantity[]"]').val()
+                var good = $(this).find('[name="product_good_quantity[]"]').val()
+                var damage = $(this).find('[name="product_damage_quantity[]"]').val()
+                var sign = $(this).find('[name="product_sign[]"]').val()
+                qty = qty > 0 ? qty : 0;
+                price = price > 0 ? price : 0;
+                sub_product += parseFloat((parseFloat(qty) - parseFloat(good) - parseFloat(damage)) * parseFloat(price))
+                gtotal += parseFloat((parseFloat(qty) - parseFloat(good) - parseFloat(damage)) * parseFloat(price))
+                $(this).find('.product_total').text(parseFloat((parseFloat(qty) - parseFloat(good) - parseFloat(damage)) * parseFloat(price)).toLocaleString('en-US'))
+            })
+            $('.sub-total-product').text(parseFloat(sub_product).toLocaleString('en-US', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            }))
+
+            $('#extra_amount').on('change input', function() {
+                var extra = $(this).val()
+                var total = $('[name="total_amount"]').val()
+                var cost = $('[name="cost"]').val()
+                extra = extra > 0 ? extra : 0;
+                total = total > 0 ? total : 0;
+                gtotal += parseFloat(parseFloat(total) - parseFloat(cost) + parseFloat(extra))
+
+                $('.change').text(parseFloat(gtotal).toLocaleString('en-US', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                }))
+
+            })
+            extra = $('[name="extra"]').val()
+            var extra_amount = parseFloat(extra);
+            $('#extra_amount').text(parseFloat(extra_amount).toLocaleString('en-US'))
+
+            $('[name="total_amount"]').val(gtotal)
+            $('.gtotal').text(parseFloat(gtotal).toLocaleString('en-US', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            }))
+            $
+        }
+        $(function() {
+            calc_total()
+            $('#road').select2({
+                placeholder: "Please Select Road Name Here",
+                width: "100%",
+                selectionCssClass: "form-control form-control-sm rounded-0"
+            })
+
+            $('#product_list tbody').find('[name="product_price[]"]').on('input change', function() {
+                calc_total()
+            })
+            $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
+                calc_total()
+            })
+
+            $('#product_list tbody').find('.rem-product').click(function() {
+                if (confirm("Are you sure to remove this item?") == true) {
+                    $(this).closest('tr').remove()
+                    calc_total()
+                }
+            })
+
+            $('#add_product').click(function() {
+                var pid = $('#products').val()
+                if (pid < '1') {
+                    return false
+                }
+                var brand = $('#products option[value="' + pid + '"]').attr('data-brand')
+                var buy = $('#products option[value="' + pid + '"]').attr('data-buy')
+                var price = $('#products option[value="' + pid + '"]').attr('data-price')
+                var max = $('#products option[value="' + pid + '"]').attr('data-available')
+                var product_name = $('#products option[value="' + pid + '"]').text()
+                var tr = $($('noscript#product-clone').html()).clone()
+                tr.find('.product_type').text(product_name)
+                tr.find('.product_buy').text(parseFloat(buy).toLocaleString('en-US'))
+                tr.find('.product_price').text(parseFloat(price).toLocaleString('en-US'))
+                tr.find('.product_total').text(parseFloat(price).toLocaleString('en-US'))
+                tr.find('.product_available').text(parseFloat(max).toLocaleString('en-US'))
+                tr.find('[name="product_id[]"]').val(pid)
+                tr.find('[name="product_brand[]"]').val(brand)
+                tr.find('[name="product_buy[]"]').val(buy)
+                tr.find('[name="product_price[]"]').val(price)
+                tr.find('[name="product_available[]"]').val(max)
+                tr.find('[name="product_quantity[]"]').val()
+                tr.find('[name="product_free_quantity[]"]').val()
+                tr.find('[name="product_good_quantity[]"]').val()
+                tr.find('[name="product_damage_quantity[]"]').val()
+                tr.find('[name="product_sign[]"]').attr('max', max)
+                $('#product_list tbody').append(tr)
+                calc_total()
+                $('#products').val('').trigger('change')
+                tr.find('[name="product_quantity[]"]').on('input change', function() {
+                    calc_total()
+                })
+                calc_total()
+                $('#products').val('').trigger('change')
+                tr.find('[name="product_price[]"]').on('input change', function() {
+                    calc_total()
+                })
+
+                tr.find('.rem-product').click(function() {
+                    if (confirm("Are you sure to remove this item?") == true) {
+                        tr.remove()
+                        calc_total()
+                    }
+                })
+            })
+
+
+
+            $('#tendered_amount').on('change input', function() {
+                var tender = $(this).val()
+                var total = $('[name="total_amount"]').val()
+                tender = tender > 0 ? tender : 0;
+                total = total > 0 ? total : 0;
+                change = parseFloat(total) - parseFloat(tender)
+                $('#change').text(parseFloat(change).toLocaleString('en-US', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                }))
+
+            })
+            $('#cost_amount').on('change input', function() {
+                var cost = $(this).val()
+                var total = $('[name="total_amount"]').val()
+                var extra = $('[name="extra"]').val()
+                cost = cost > 0 ? cost : 0;
+                total = total > 0 ? total : 0;
+                change = parseFloat(total) - parseFloat(cost) + parseFloat(extra)
+                $('.gtotal').text(parseFloat(change).toLocaleString('en-US', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                }))
+
+            })
+            $('#extra_amount').on('change input', function() {
+                var extra = $(this).val()
+                var total = $('[name="total_amount"]').val()
+                var cost = $('[name="cost"]').val()
+                extra = extra > 0 ? extra : 0;
+                total = total > 0 ? total : 0;
+                change = parseFloat(total) - parseFloat(cost) + parseFloat(extra)
+                $('.gtotal').text(parseFloat(change).toLocaleString('en-US', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                }))
+
+            })
+
+            $('#pay_later').click(function() {
+                $('#tendered_amount').val(0).attr('required', false)
+                $('#sell-form').submit()
+            })
+            $('#sale-submit-btn').click(function() {
+                $('#tendered_amount').attr('required', true)
+            })
+
+            $('#sell-form').submit(function(e) {
+                e.preventDefault();
+                var _this = $(this)
+                $('.err-msg').remove();
+                var el = $('<div>')
+                el.addClass("alert alert-danger err-msg")
+                el.hide()
+                if (_this[0].checkValidity() == false) {
+                    _this[0].reportValidity();
+                    return false;
+                }
+                if ($('#tendered_amount').prop('required') == true) {
+                    var change = $('#change').text()
+                    change = change.replace(/,/gi, '')
+                    change = !isNaN(change) ? change : 0
+                    if (change < 0) {
+                        alert("Tendered amount is invalid.")
+                        return false
+                    }
+                }
+                start_loader();
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": '{{csrf_token}}'
+                    },
+                    url: "{% url 'save-sell' %}",
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    dataType: 'json',
+                    error: err => {
+                        console.log(err)
+                        alert("An error occured", 'error');
+                        end_loader();
+                    },
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            location.replace('{% url "view-sell" %}/' + resp.id)
+                        } else if (resp.status == 'failed' && !!resp.msg) {
+                            el.text(resp.msg)
+                        } else {
+                            el.text("An error occured", 'error');
+                            end_loader();
+                            console.err(resp)
+                        }
+                        _this.prepend(el)
+                        el.show('slow')
+                        $("html, body, .modal").scrollTop(0);
+                        end_loader()
+                    }
+                })
+            })
+        })
+
+</script>
+{% endblock pageScripts %}
