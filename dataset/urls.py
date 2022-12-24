@@ -37,6 +37,7 @@ urlpatterns = [
     path('manage_product/<int:pk>', views.manage_product, name='manage-product-pk'),
     path('save_product', views.save_product, name='save-product'),
     path('delete_product/<int:pk>', views.delete_product, name='delete-product'),
+    path('view_product', views.view_product, name='view-product'),
     path('view_product/<int:pk>', views.view_product, name='view-product-pk'),
     path('ajax/load-unit/', views.load_unit, name='ajax_load_unit'),
     # crud urls for purchase
@@ -47,4 +48,12 @@ urlpatterns = [
     path('delete_purchase/<int:pk>', views.delete_purchase, name='delete-purchase'),
     path('view_purchase', views.view_purchase, name='view-purchase'),
     path('view_purchase/<int:pk>', views.view_purchase, name='view-purchase-pk'),
+    # crud urls for sell
+    path('sell', views.sell, name='sell-page'),
+    path('manage_sell', views.manage_sell, name='manage-sell'),
+    path('manage_sell/<int:pk>', views.manage_sell, name='manage-sell-pk'),
+    path('save_purchase', views.save_sell, name='save-sell'),
+    path('delete_sell/<int:pk>', views.delete_sell, name='delete-sell'),
+    path('view_sell', views.view_sell, name='view-sell'),
+    path('view_sell/<int:pk>', views.view_sell, name='view-sell-pk'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
