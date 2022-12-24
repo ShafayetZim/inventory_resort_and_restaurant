@@ -424,3 +424,77 @@ def delete_purchase(request, pk):
         return redirect('purchase-page')
 
 
+def sell(request):
+    context = context_data(request)
+    context['title'] = 'Sell'
+    context['nav_bar'] = 'Sell List'
+    context[sell] = models.SellSet.objects.order_by('status', '-date_added').all()
+    return render(request, 'ecommerce/sell.html', context)
+
+
+def save_sell(request):
+    resp = {'status': 'failed', 'msg': '', 'id': ''}
+    if request.method == 'POST':
+        post = request.POST
+        if not post['id'] == '':
+            sell = models.SellSet.objects.get(id=post['id'])
+            form = forms.SaveSell(request.POST, instance=sell)
+        else:
+            form = forms.SaveSell(request.POST)
+        if form.is_valid():
+            form.save()
+            if post['id'] == '':
+                messages.success(request, "Sell has been saved successfully.")
+                pid = models.SellSet.objects.last().id
+                resp['id'] = pid
+            else:
+                messages.success(request, "Sell has been updated successfully.")
+                resp['id'] = post['id']
+            resp['status'] = 'success'
+        else:
+            for field in form:
+                for error in field.errors:
+                    if not resp['msg'] == '':
+                        resp['msg'] += str('<br />')
+                    resp['msg'] += str(f'[{field.name}] {error}')
+    else:
+        resp['msg'] = "There's no data sent on the request"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+def manage_sell(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'Manage Sell'
+    context['nav_bar'] = 'manage_sell'
+    if pk is None:
+        context['sell'] = {}
+        context['pitems'] = {}
+    else:
+        context['sell'] = models.SellSet.objects.get(id=pk)
+        context['pitems'] = models.SellItem.objects.filter(sell_id=pk).all()
+
+    return render(request, 'ecommerce/manage_sell.html', context)
+
+
+def view_sell(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'View Sell'
+    context['nav_bar'] = 'view_sell'
+    if pk is None:
+        context['sell'] = {}
+        context['pitems'] = {}
+    else:
+        context['sell'] = models.SellSet.objects.get(id=pk)
+        context['pitems'] = models.SellItem.objects.filter(sell__in=pk).all()
+
+    return render(request, 'view_sell.html', context)
+
+
+def delete_sell(request, pk):
+    if request.method == 'GET':
+        instance = models.SellSet.objects.get(pk=pk)
+        models.SellSet.objects.filter(pk=instance.pk).delete()
+        instance.delete()
+        messages.add_message(request, messages.SUCCESS, "Sell set has been deleted successfully.")
+        return redirect('sell-page')
