@@ -178,7 +178,7 @@ class SavePurchase(forms.ModelForm):
             return False
 
 
-class SaveSale(forms.ModelForm):
+class SaveSell(forms.ModelForm):
     code = forms.CharField(max_length=50)
     client = forms.CharField(max_length=2)
     status = forms.CharField(max_length=3)
