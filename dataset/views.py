@@ -428,7 +428,7 @@ def sell(request):
     context = context_data(request)
     context['title'] = 'Sell'
     context['nav_bar'] = 'Sell List'
-    context[sell] = models.SellSet.objects.order_by('status', '-date_added').all()
+    context['sell'] = models.SellSet.objects.order_by('status', '-date_added').all()
     return render(request, 'ecommerce/sell.html', context)
 
 
@@ -467,6 +467,7 @@ def manage_sell(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Sell'
     context['nav_bar'] = 'manage_sell'
+    context['products'] = models.Product.objects.all()
     if pk is None:
         context['sell'] = {}
         context['pitems'] = {}
