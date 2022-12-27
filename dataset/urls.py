@@ -56,4 +56,6 @@ urlpatterns = [
     path('delete_sell/<int:pk>', views.delete_sell, name='delete-sell'),
     path('view_sell', views.view_sell, name='view-sell'),
     path('view_sell/<int:pk>', views.view_sell, name='view-sell-pk'),
+    path('view_invoice', views.view_invoice, name='view-invoice'),
+    path('view_invoice/<int:pk>', views.view_invoice, name='view-invoice-pk'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
