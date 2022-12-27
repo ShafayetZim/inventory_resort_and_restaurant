@@ -47,7 +47,7 @@
                                         <input type="hidden" name="id" value="{{sell.id}}">
                                         <input type="hidden" name="code" value="{% if sell.code  %}{{sell.code}}{% else %}generate{% endif %}">
                                         <input type="hidden" name="status" value="{% if sell.status  %}{{sell.status}}{% else %}0{% endif %}">
-                                        <input type="hidden" name="total_amount" value="{% if sell.total_amount  %}{{sell.total_amount}}{% else %}0{% endif %}">
+<!--                                        <input type="hidden" name="total_amount" value="{% if sell.total_amount  %}{{sell.total_amount}}{% else %}0{% endif %}">-->
                                         <div class="card mb-3">
                                             <div class="card-header">
                                                 <div class="card-title py-1">Transaction Details</div>
@@ -164,16 +164,8 @@
                                                         <h4 class="fw-bolder text-muted pe-2">Grand Total:</h4>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
-                                                        <h4 class="fw-bolder pe-2 gtotal">{% if sale.total_amount %}{{sale.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
-                                                    </div>
-                                                </div>
-
-                                                <div class="d-flex w-100 justify-content-end align-items-center">
-                                                    <div class="col-auto">
-                                                        <h4 class="fw-bolder text-muted pe-2">Extra Amount:</h4>
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
-                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="extra_amount" name="extra" value="{% if sale.extra %}{{sale.extra|floatformat:2}}{% else %}0{% endif %}" required>
+<!--                                                        <h4 class="fw-bolder pe-2 gtotal">{% if sale.total_amount %}{{sale.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>-->
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end gtotal" id="total_amount" name="total_amount" value="{% if sell.total_amount %}{{sell.total_amount|floatformat:2}}{% else %}0{% endif %}" required readonly>
                                                     </div>
                                                 </div>
 
@@ -182,7 +174,7 @@
                                                         <h4 class="fw-bolder text-muted pe-2">Paid Amount:</h4>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
-                                                        <input type="number" step="any" onchange="myFunction()" class="form-control form-control-sm text-end" id="paid_amount" name="paid" value="{% if sell.paid %}{{sell.paid|floatformat:2}}{% else %}0{% endif %}" required>
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="paid_amount" name="paid" value="{% if sell.paid %}{{sell.paid|floatformat:2}}{% else %}0{% endif %}" required>
                                                     </div>
                                                 </div>
 
@@ -196,8 +188,8 @@
                                                 </div>
                                             </div>
                                             <div class="card-footer py-1 text-center">
-                                                <button class="btn btn-primary btn-sm-0 bg-gradient bg-primary" type="button" id="pay_later">Pay Later</button>
-                                                <button class="btn btn-success btn-sm-0 bg-gradient bg-success" id="sell-submit-btn" form="sell-form"><i class="fa fa-save"></i> Pay Now</button>
+<!--                                                <button class="btn btn-primary btn-sm-0 bg-gradient bg-primary" type="button" id="pay_later">Pay Later</button>-->
+                                                <button class="btn btn-success btn-sm-0 bg-gradient bg-success" id="sell-submit-btn" form="sell-form"><i class="fa fa-save"></i> Save Now</button>
                                             </div>
                                         </div>
                                     </form>
@@ -262,25 +254,6 @@
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
             }))
-
-            $('#extra_amount').on('change input', function() {
-                var extra = $(this).val()
-                var total = $('[name="total_amount"]').val()
-                var due = $('[name="due"]').val()
-                extra = extra > 0 ? extra : 0;
-                total = total > 0 ? total : 0;
-                gtotal += parseFloat(parseFloat(total) - parseFloat(due) + parseFloat(extra))
-
-                $('.change').text(parseFloat(gtotal).toLocaleString('en-US', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2
-                }))
-
-            })
-            extra = $('[name="extra"]').val()
-            var extra_amount = parseFloat(extra);
-            $('#extra_amount').text(parseFloat(extra_amount).toLocaleString('en-US'))
 
             $('[name="total_amount"]').val(gtotal)
             $('.gtotal').text(parseFloat(gtotal).toLocaleString('en-US', {
@@ -370,49 +343,20 @@
             })
 
 
+            $('input[name="total_amount"]').change(function(){
+                var sub = $(this).val();
+                var paid = $('input[name="paid"]').val();
+                var due = parseFloat(sub) - parseFloat(paid);
+                $('#due_amount').val(due);
 
-            $('#paid_amount').on('change input', function() {
-                var paid = $(this).val()
-                var total = $('[name="total_amount"]').val()
-                var due = $('[name="due"]').val()
-                paid = paid > 0 ? paid : 0;
-                total = total > 0 ? total : 0;
-                change = parseFloat(total) - parseFloat(paid)
-                $('#due_amount').text(parseFloat(change).toLocaleString('en-US', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2
-                }))
+            });
 
-            })
-            $('#due_amount').on('change input', function() {
-                var due = $(this).val()
-                var total = $('[name="total_amount"]').val()
-                var extra = $('[name="extra"]').val()
-                due = due > 0 ? due : 0;
-                total = total > 0 ? total : 0;
-                change = parseFloat(total) - parseFloat(due) + parseFloat(extra)
-                $('.gtotal').text(parseFloat(change).toLocaleString('en-US', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2
-                }))
-
-            })
-            $('#extra_amount').on('change input', function() {
-                var extra = $(this).val()
-                var total = $('[name="total_amount"]').val()
-                var due = $('[name="due"]').val()
-                extra = extra > 0 ? extra : 0;
-                total = total > 0 ? total : 0;
-                change = parseFloat(total) - parseFloat(due) + parseFloat(extra)
-                $('.gtotal').text(parseFloat(change).toLocaleString('en-US', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2
-                }))
-
-            })
+             $('input[name="paid"]').on('input',function(){
+                    var paid = $(this).val();
+                    var sub = $('input[name="total_amount"]').val();
+                    var due = parseFloat(sub) - parseFloat(paid);
+                    $('#due_amount').val(due);
+            });
 
             $('#pay_later').click(function() {
                 $('#paid_amount').val(0).attr('required', false)
@@ -462,7 +406,7 @@
                     },
                     success: function(resp) {
                         if (typeof resp == 'object' && resp.status == 'success') {
-                            location.replace('{% url "view-sell" %}/' + resp.id)
+                            location.replace('{% url "view-invoice" %}/' + resp.id)
                         } else if (resp.status == 'failed' && !!resp.msg) {
                             el.text(resp.msg)
                         } else {
@@ -480,10 +424,5 @@
         })
 
 </script>
-<script>
-function myFunction() {
-  var x = document.getElementById("paid_amount").value;
-  alert(x);
-}
-</script>
+
 {% endblock pageScripts %}
