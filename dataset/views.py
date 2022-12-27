@@ -397,7 +397,7 @@ def manage_purchase(request, pk=None):
         context['purchase'] = models.PurchaseSet.objects.get(id=pk)
         context['pitems'] = models.PurchaseItem.objects.filter(purchase__id=pk).all()
 
-    return render(request, 'ecommerce/manage_purchase.html', context)
+    return render(request, 'test.html', context)
 
 
 def view_purchase(request, pk=None):
@@ -455,10 +455,10 @@ def save_sell(request):
             for field in form:
                 for error in field.errors:
                     if not resp['msg'] == '':
-                        resp['msg'] += str('<br />')
+                        resp['msg'] += str('<br/>')
                     resp['msg'] += str(f'[{field.name}] {error}')
     else:
-        resp['msg'] = "There's no data sent on the request"
+         resp['msg'] = "There's no data sent on the request"
 
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
@@ -499,3 +499,17 @@ def delete_sell(request, pk):
         instance.delete()
         messages.add_message(request, messages.SUCCESS, "Sell set has been deleted successfully.")
         return redirect('sell-page')
+
+
+def view_invoice(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'View Sell'
+    context['nav_bar'] = 'view_sell'
+    if pk is None:
+        context['sell'] = {}
+        context['pitems'] = {}
+    else:
+        context['sell'] = models.SellSet.objects.get(id=pk)
+        context['pitems'] = models.SellItem.objects.filter(sell__id=pk).all()
+
+    return render(request, 'ecommerce/invoice.html', context)
