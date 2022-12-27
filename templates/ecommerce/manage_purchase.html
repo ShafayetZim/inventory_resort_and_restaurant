@@ -242,7 +242,6 @@
 
             $('#pay_later').click(function() {
 
-                $('#purchase-form').submit()
             })
 
             $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
@@ -317,7 +316,7 @@
                     },
                     success: function(resp) {
                         if (typeof resp == 'object' && resp.status == 'success') {
-                            location.replace('{% url "view-purchase" %}/' + resp.id)
+                            location.replace('{% url "purchase-page" %}')
                         } else if (resp.status == 'failed' && !!resp.msg) {
                             el.text(resp.msg)
                         } else {
