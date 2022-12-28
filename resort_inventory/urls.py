@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dataset.urls')),
     path('', include('ecommerce.urls')),
+    path('', include('sales.urls')),
 ]
