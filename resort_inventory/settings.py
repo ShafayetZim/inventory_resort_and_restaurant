@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'dataset',
     'ecommerce',
+    'sales',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
