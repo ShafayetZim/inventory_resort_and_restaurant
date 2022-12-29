@@ -335,7 +335,7 @@ def view_product(request, pk=None):
     else:
         context['product'] = models.Product.objects.get(id=pk)
 
-    return render(request, 'view_product', context)
+    return render(request, 'view_product.html', context)
 
 
 def load_unit(request):
@@ -427,7 +427,7 @@ def delete_purchase(request, pk):
 def sell(request):
     context = context_data(request)
     context['title'] = 'Sell'
-    context['nav_bar'] = 'Sell List'
+    context['nav_bar'] = 'sell_list'
     context['sell'] = models.SellSet.objects.order_by('status', '-date_added').all()
     return render(request, 'ecommerce/sell.html', context)
 

@@ -115,7 +115,7 @@ class SellSet(models.Model):
     date = models.DateField(default=date.today)
 
     def __str__(self):
-        return str(f"{self.code} - {self.client}")
+        return str(f"{self.code}")
 
     class Meta:
         verbose_name_plural = "Sell Set"
