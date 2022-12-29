@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageStyles %}
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/assets/css/dark/card.css' %}" />
+{% endblock pageStyles %}
+
+{% block content %}
+
+
+<div class="layout-px-spacing">
+    <div class="middle-content container-xxl p-0">
+
+        <!-- BREADCRUMB -->
+            <div class="page-meta">
+                <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Product</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Details</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- /BREADCRUMB -->
+
+        <div class="row mt-4 mb-2">
+
+            <div class="col">
+                <a href="#" class="card yellow">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.name}}</p>
+                  </div>
+                  <p class="text-center">Name</p>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="card pastel-green">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.code}}</p>
+                  </div>
+                  <p class="text-center">Code</p>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="card purple">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.brand}}</p>
+                  </div>
+                  <p class="text-center">Brand</p>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="card light-blue">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.package}}</p>
+                  </div>
+                  <p class="text-center">Package</p>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="row mt-2">
+
+            <div class="col">
+                <a href="#" class="card blue-lagoon">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.unit}}</p>
+                  </div>
+                  <p class="text-center">Unit Set</p>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="card blue-gray">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.value}}</p>
+                  </div>
+                  <p class="text-center">Unit Value</p>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="card peach">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.buy_price}}</p>
+                  </div>
+                  <p class="text-center">Buy Price</p>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="card blue-hosta">
+                     <div class="overlay"></div>
+                  <div class="circle">
+                      <p class="text-center">{{product.sell_price}}</p>
+                  </div>
+                  <p class="text-center">Sell Price</p>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block pageScripts %}
+
+{% endblock pageScripts %}
