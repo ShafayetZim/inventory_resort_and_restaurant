@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block pageStyles %}
+    <link rel="{% static 'stylesheet" href="src/plugins/src/font-icons/fontawesome/css/regular.css' %}">
+    <link rel="{% static 'stylesheet" href="src/plugins/src/font-icons/fontawesome/css/fontawesome.css' %}">
+
+    <link href="{% static 'src/assets/css/light/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/light/components/font-icons.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'src/assets/css/dark/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/components/font-icons.css' %}" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="container">
+                <div class="container">
+
+                    <!-- BREADCRUMB -->
+                    <div class="page-meta">
+                        <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Purchase</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- /BREADCRUMB -->
+
+                    <div class="row mt-2">
+
+                        <div id="flFormsGrid" class="col-lg-12 layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Add Purchase</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content widget-content-area text-center">
+                                    <form action="" id="purchase-form">
+                                        <input type="hidden" name="id" value="{{purchase.id}}" />
+                                        <input type="hidden" name="code" value="{% if purchase.code  %}{{purchase.code}}{% else %}generate{% endif %}">
+                                        <input type="hidden" name="status" value="{% if purchase.status  %}{{purchase.status}}{% else %}0{% endif %}">
+                                        <input type="hidden" name="total_amount" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">
+                                        <input type="hidden" name="paid" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">
+                                        <input type="hidden" name="due" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">
+
+                                        {% if purchase.code %}
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="card-title py-1">Purchase Details</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <label for="" class="control-label">Transaction Code: {{purchase.code}}</label>
+<!--                                                            <div class="h5"><b>{{purchase.code}}</b></div>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="card-title py-1">Item List</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row align-items-end text-start">
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <label for="products" class="control-label">Products</label>
+                                                            <select id="products" class="form-select form-select-lg">
+                                                                <option value="" disabled selected></option>
+                                                                {% for product in products %}
+                                                                <option value="{{product.pk}}" data-price = "{{product.buy_price}}" data-unit="{{product.value}}">{{product.name}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <button class="btn btn-primary btn-sm-0 bg-gradient bg-primary" type="button" id="add_product"><i data-feather="plus-square"></i><span class="icon-name">+</span> Add Product</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clear-fix mt-2"></div>
+                                                    <table class="table table-bordered" id="product_list">
+                                                        <colgroup>
+                                                            <col width="5%">
+                                                            <col width="35%">
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="p-1 text-center"></th>
+                                                                <th class="p-1 text-center">Product Name</th>
+                                                                <th class="p-1 text-center">Unit</th>
+                                                                <th class="p-1 text-center">Price</th>
+                                                                <th class="p-1 text-center">Quantity</th>
+                                                                <th class="p-1 text-center">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for pitem in pitems %}
+                                                            <tr>
+                                                                <td class="px-2 py-1 align-middle text-center">
+                                                                    <input type="hidden" name="product_id[]" value="{{pitem.product.id}}">
+                                                                    <input type="hidden" name="product_price[]" value="{{pitem.price}}">
+                                                                    <input type="hidden" name="product_unit[]" value="{{pitem.unit_value}}">
+                                                                    <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle product_type">{{pitem.product.name}}</td>
+                                                                <td class="px-2 py-1 align-middle text-center product_unit">{{pitem.unit_value}}</td>
+                                                                <td class="px-2 py-1 align-middle text-center product_price">{{pitem.price|floatformat}}</td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="number" min="1" value="{{pitem.quantity|floatformat}}" class="form-control form-control-sm text-center" name="product_quantity[]" required>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle product_total text-end">{{pitem.total_amount|floatformat}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th class="text-center" colspan="5">Total</th>
+                                                                <th class="text-end sub-total-product">0.00</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Grand Total:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <h4 class="fw-bolder pe-2 gtotal">{% if purchase.total_amount %}{{purchase.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-footer py-1 text-center">
+<!--                                                <button class="btn btn-primary btn-sm" type="button" id="pay_later">Save</button>-->
+                                                <button type="submit" class="btn btn-success mb-2 mt-3 btn-md" id="pay_later">Submit</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+<noscript id="product-clone">
+    <tr>
+        <td class="px-2 py-1 align-middle text-center">
+            <input type="hidden" name="product_id[]" value="">
+            <input type="hidden" name="product_price[]" value="">
+            <input type="hidden" name="product_unit[]" value="">
+            <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
+        </td>
+        <td class="px-2 py-1 align-middle product_type"></td>
+        <td class="px-2 py-1 align-middle text-center product_unit"></td>
+        <td class="px-2 py-1 align-middle text-center product_price">0.00</td>
+        <td class="px-2 py-1 align-middle">
+            <input type="number" min="1" value="1" class="form-control form-control-sm text-center" name="product_quantity[]" required>
+        </td>
+        <td class="px-2 py-1 align-middle product_total text-end">0.00</td>
+    </tr>
+</noscript>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/plugins/src/highlight/highlight.pack.js' %}"></script>
+    <script src="{% static 'src/assets/js/scrollspyNav.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/tomSelect/tom-select.base.js' %}"></script>
+    <script src="{% static 'src/plugins/src/tomSelect/custom-tom-select.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/font-icons/feather/feather.min.js' %}"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("On Customer selected")
+            $('#products').on('change', function () {
+                console.log("On Customer selected")
+            });
+        });
+
+
+        function calc_total() {
+            var sub_product = 0
+            var gtotal = 0
+            $('#product_list tbody tr').each(function() {
+                var buy = $(this).find('[name="product_price[]"]').val()
+                var qty = $(this).find('[name="product_quantity[]"]').val()
+                var unit = $(this).find('[name="unit_value[]"]').val()
+                qty = qty > 0 ? qty : 0;
+                buy = buy > 0 ? buy : 0;
+                sub_product += parseFloat(parseFloat(qty) * parseFloat(buy))
+                gtotal += parseFloat(parseFloat(qty) * parseFloat(buy))
+                $(this).find('.product_total').text(parseFloat(parseFloat(qty) * parseFloat(buy)).toLocaleString('en-US'))
+            })
+            $('.sub-total-product').text(parseFloat(sub_product).toLocaleString('en-US', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            }))
+            $('[name="total_amount"]').val(gtotal)
+            $('.gtotal').text(parseFloat(gtotal).toLocaleString('en-US', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            }))
+            $
+        }
+        $(function() {
+            calc_total()
+            $('#brand').select2({
+                placeholder: "Please Select Brand Here",
+                width: "100%",
+                selectionCssClass: "form-control form-control-sm rounded-0"
+            })
+            new TomSelect("#products",{
+                create: false,
+                placeholder: "Please Select Product Here",
+                sortField: {
+                    field: "text",
+                    direction: "asc",
+                }
+            });
+
+            $('#pay_later').click(function() {
+
+
+            })
+
+            $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
+                calc_total()
+            })
+            $('#product_list tbody').find('.rem-product').click(function() {
+                if (confirm("Are you sure to remove this item?") == true) {
+                    $(this).closest('tr').remove()
+                    calc_total()
+                }
+            })
+
+            $('#add_product').click(function() {
+                var pid = $('#products').val()
+
+                var buy = $('#products option[value="' + pid + '"]').attr('data-price')
+                var unit = $('#products option[value="' + pid + '"]').attr('data-unit')
+                var product_name = $('#products option[value="' + pid + '"]').text()
+                var tr = $($('noscript#product-clone').html()).clone()
+                tr.find('.product_type').text(product_name)
+                tr.find('.product_unit').text(String(unit).toLocaleString('en-US'))
+                tr.find('.product_price').text(parseFloat(buy).toLocaleString('en-US'))
+                tr.find('.product_total').text(parseFloat(buy).toLocaleString('en-US'))
+                tr.find('[name="product_id[]"]').val(pid)
+                tr.find('[name="product_price[]"]').val(buy)
+                tr.find('[name="product_unit[]"]').val(unit)
+
+                $('#product_list tbody').append(tr)
+                calc_total()
+                $('#products').val('').trigger('change')
+                tr.find('[name="product_quantity[]"]').on('input change', function() {
+                    calc_total()
+                })
+                tr.find('.rem-product').click(function() {
+                    if (confirm("Are you sure to remove this item?") == true) {
+                        tr.remove()
+                        calc_total()
+                    }
+                })
+            })
+            $('#purchase-form').submit(function(e) {
+                e.preventDefault();
+                var _this = $(this)
+                $('.err-msg').remove();
+                var el = $('<div>')
+                el.addClass("alert alert-danger err-msg")
+                el.hide()
+                if (_this[0].checkValidity() == false) {
+                    _this[0].reportValidity();
+                    return false;
+                }
+
+
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": '{{csrf_token}}'
+                    },
+                    url: "{% url 'save-purchase' %}",
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    dataType: 'json',
+                    error: err => {
+                        console.log(err)
+                        alert("An error occured", 'error');
+                        end_loader();
+                    },
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            location.replace('{% url "purchase-page" %}')
+                        } else if (resp.status == 'failed' && !!resp.msg) {
+                            el.text(resp.msg)
+                        } else {
+                            el.text("An error occured", 'error');
+                            end_loader();
+                            console.err(resp)
+                        }
+                        _this.prepend(el)
+                        el.show('slow')
+                        $("html, body, .modal").scrollTop(0);
+                        end_loader()
+                    }
+                })
+            })
+        })
+
+</script>
+
+{% endblock pageScripts %}
