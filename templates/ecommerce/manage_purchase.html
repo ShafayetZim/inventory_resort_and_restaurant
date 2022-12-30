@@ -198,7 +198,18 @@
 
 
     <script>
-        function calc_total() {
+
+    $(document).ready(function () {
+    console.log("On Customer selected")
+                $('#products').on('change', function () {
+        console.log("On Customer selected")
+    });
+    });
+
+
+
+
+     function calc_total() {
             var sub_product = 0
             var gtotal = 0
             $('#product_list tbody tr').each(function() {
@@ -284,6 +295,8 @@
                     }
                 })
             })
+
+
             $('#purchase-form').submit(function(e) {
                 e.preventDefault();
                 var _this = $(this)
