@@ -2,6 +2,7 @@ from datetime import datetime
 from django import forms
 from dataset import models
 import datetime
+from numpy import require
 from tabnanny import check
 
 
@@ -142,10 +143,10 @@ class SavePurchase(forms.ModelForm):
             code = 1
             while True:
                 try:
-                    check = models.PurchaseSet.objects.get(code=f"{pref}{code:03d}")
+                    check = models.PurchaseSet.objects.get(code=f"{pref}{code:05d}")
                     code = code + 1
                 except:
-                    return f"{pref}{code:03d}"
+                    return f"{pref}{code:05d}"
                     break
         else:
             return code
@@ -198,10 +199,10 @@ class SaveSell(forms.ModelForm):
             code = 1
             while True:
                 try:
-                    check = models.SellSet.objects.get(code=f"{pref}{code:03d}")
+                    check = models.SellSet.objects.get(code=f"{pref}{code:05d}")
                     code = code + 1
                 except:
-                    return f"{pref}{code:02}"
+                    return f"{pref}{code:05d}"
                     break
         else:
             return code
