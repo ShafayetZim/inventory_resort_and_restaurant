@@ -397,7 +397,7 @@ def manage_purchase(request, pk=None):
         context['purchase'] = models.PurchaseSet.objects.get(id=pk)
         context['pitems'] = models.PurchaseItem.objects.filter(purchase__id=pk).all()
 
-    return render(request, 'test.html', context)
+    return render(request, 'ecommerce/manage_purchase.html', context)
 
 
 def view_purchase(request, pk=None):
