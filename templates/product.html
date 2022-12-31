@@ -45,6 +45,7 @@
                                         <th>Unit</th>
                                         <th>Buy Price</th>
                                         <th>Sell Price</th>
+                                        <th>Stock</th>
                                         <th class="text-center dt-no-sorting">Action</th>
                                     </tr>
                                 </thead>
@@ -58,6 +59,7 @@
                                         <td>{{ item.value }}</td>
                                         <td>{{ item.buy_price }}</td>
                                         <td>{{ item.sell_price }}</td>
+                                        <td>{{ item.available }}</td>
                                         <td class="text-center">
                                             <ul class="table-controls">
                                                 <li><a href="{% url 'view-product-pk' item.pk %}" class="bs-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="View" data-original-title="View"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 mb-1"><path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a></li>
@@ -101,26 +103,5 @@
 {% block pageScripts %}
     <script src="{% static 'src/assets/js/custom.js' %}"></script>
     <script src="{% static 'src/plugins/src/table/datatable/datatables.js' %}"></script>
-
-    <script>
-        // var e;
-
-        c3 = $('#style-3').DataTable({
-            "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
-        "<'table-responsive'tr>" +
-        "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-            "oLanguage": {
-                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
-                "sInfo": "Showing page _PAGE_ of _PAGES_",
-                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-                "sSearchPlaceholder": "Search...",
-               "sLengthMenu": "Results :  _MENU_",
-            },
-            "stripeClasses": [],
-            "lengthMenu": [5, 10, 20, 50],
-            "pageLength": 10
-        });
-
-        multiCheck(c3);
-    </script>
+    <script src="{% static 'src/assets/js/ecommerce/datatable_pagination.js' %}"></script>
 {% endblock pageScripts %}
