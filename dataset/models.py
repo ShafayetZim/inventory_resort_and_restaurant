@@ -60,6 +60,23 @@ class Product(models.Model):
     def __str__(self):
         return str(f"{self.name}")
 
+    def available(self):
+        try:
+            stockin = PurchaseItem.objects.filter(product__id = self.id).aggregate(Sum('quantity'))
+            stockin = stockin['quantity__sum']
+        except:
+            stockin = 0
+        try:
+            stockout = SellItem.objects.filter(product__id = self.id).aggregate(Sum('quantity'))
+            stockout = stockout['quantity__sum']
+        except:
+            stockout = 0
+
+        stockin = stockin if not stockin is None else 0
+        stockout = stockout if not stockout is None else 0
+
+        return float(stockin - stockout)
+
     class Meta:
         verbose_name_plural = "Product Set"
 
