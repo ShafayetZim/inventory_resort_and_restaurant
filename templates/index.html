@@ -8,6 +8,7 @@
 
     <link href="{% static 'src/assets/css/dark/components/list-group.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'src/assets/css/dark/dashboard/dash_2.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'src/assets/css/dark/card.css' %}" />
     {% endblock pageStyles %}
 
 
@@ -20,9 +21,89 @@
               >
                 <div class="widget widget-chart-one">
                   <div class="widget-heading">
-                    <h5 class="">Dashboard</h5>
+                    <h5 class="dancing">Welcome to Eque Heritage Hotel And Resort</h5>
+                      <h5 class="">Dashboard</h5>
                   </div>
                 </div>
+
+                  <div class="row mt-4 mb-2">
+                    <div class="col">
+                        <a href="#" class="card yellow">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{products}}</p>
+                          </div>
+                          <p class="text-center">Total Product</p>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="card pastel-green">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{available}}</p>
+                          </div>
+                          <p class="text-center">Total Stock</p>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="card blue-gray">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{sell}}</p>
+                          </div>
+                          <p class="text-center">Today Sell</p>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="card blue-hosta">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{month_sell}}</p>
+                          </div>
+                          <p class="text-center">Month Sell</p>
+                        </a>
+                    </div>
+                  </div>
+
+                  <div class="row mt-2">
+                    <div class="col">
+                        <a href="{% url 'low-stock' %}" class="card blue-lagoon">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{count}} <br> see list...</p>
+                          </div>
+                          <p class="text-center">Low Stock</p>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="card light-blue">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{due}}</p>
+                          </div>
+                          <p class="text-center">Today Due</p>
+                        </a>
+                    </div>
+                      <div class="col">
+                        <a href="#" class="card purple">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{month_due}}</p>
+                          </div>
+                          <p class="text-center">Month Due</p>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="card peach">
+                          <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">{{product.buy_price}}</p>
+                          </div>
+                          <p class="text-center">X</p>
+                        </a>
+                    </div>
+                  </div>
+
               </div>
             </div>
           </div>
