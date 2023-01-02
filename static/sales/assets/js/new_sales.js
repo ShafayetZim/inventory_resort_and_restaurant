@@ -45,6 +45,23 @@ $(document).ready(function () {
         updateStockQtyOnWarehouseChange(warehouse_id);
     });
 
+    $('#id_form-0-product').on('change', function () {
+        console.log("On Product Selected")
+        let product_id = $(this).children('option:selected').val();
+        console.log(product_id);
+        updateStockQtyOnWarehouseChange(warehouse_id);
+        for (var i = 0; i < 10; i++){
+            $("#id_items_set-"+i+"-model").select2();
+        }
+    });
+
+     $(()=>{
+        let ids = document.querySelectorAll("[id=*'id_items_set']");
+        ids.forEach((element)=>{
+            $(element).select2();
+        });
+     });
+
 
 
 });
@@ -148,6 +165,8 @@ $(document).ready(function () {
             return false;
         });
 
+
+
         $('#id_product').on('change', function () {
             console.log("On product selected")
             let product_id = $(this).children('option:selected').val();
@@ -209,11 +228,36 @@ $(document).ready(function () {
                 for (var i=0;  i<total; i++) {
                      let item = document.getElementById("id_form-"+i+"-product").value;
                      var element = document.getElementById("id_form-"+i+"-extra_field");
+                     var price = document.getElementById("id_form-"+i+"-price");
                       console.log("Item: "+item);
                       console.log("Warehouse: "+warehouse_id);
+                      console.log("Price: "+price);
                       getAvailableStockByWarehouseAll(element, item, warehouse_id);
+                      getAvailableProductAll(item);
                 }
 
+        }
+
+        function getProductAll(item){
+
+                $('#item').on('change', function () {
+                    console.log("On product selected")
+                    let customer_code = $(this).children('option:selected').val();
+                    console.log(customer_code);
+                    $.ajax({
+                        url: 'product-information',
+                        data: {
+                          'customer_code': customer_code
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            $("#id_address").val(data.address);
+                            $("#id_phone").val(data.phone);
+
+                        }
+                    });
+                });
         }
 
 
