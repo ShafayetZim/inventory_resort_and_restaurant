@@ -25,6 +25,7 @@ body.dark .widget {
 }
 body.dark .widget .widget-heading {
   margin-bottom: 15px;
+  justify-content: space-between;
 }
 body.dark .widget h5 {
   letter-spacing: 0px;
@@ -33,6 +34,10 @@ body.dark .widget h5 {
   color: #e0e6ed;
   font-weight: 600;
   margin-bottom: 0;
+}
+body.dark .widget .widget-heading .dancing {
+  font-family: "Dancing Script";
+  color: rgb(205, 51, 7);
 }
 body.dark .apexcharts-legend-text {
   color: #bfc9d4 !important;
