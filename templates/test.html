@@ -196,18 +196,20 @@
 
     <script src="{% static 'src/plugins/src/font-icons/feather/feather.min.js' %}"></script>
 
-
+    <script src="{% static 'sales/assets/js/new_sales.js' %}" type="text/javascript"></script>
     <script>
 
-        $(document).ready(function () {
-            console.log("On Customer selected")
-            $('#products').on('change', function () {
-                console.log("On Customer selected")
-            });
-        });
+    $(document).ready(function () {
+    console.log("On Customer selected")
+                $('#products').on('change', function () {
+        console.log("On Customer selected")
+    });
+    });
 
 
-        function calc_total() {
+
+
+     function calc_total() {
             var sub_product = 0
             var gtotal = 0
             $('#product_list tbody tr').each(function() {
@@ -251,7 +253,6 @@
 
             $('#pay_later').click(function() {
 
-
             })
 
             $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
@@ -266,7 +267,9 @@
 
             $('#add_product').click(function() {
                 var pid = $('#products').val()
-
+                if (pid < '1') {
+                    return false
+                }
                 var buy = $('#products option[value="' + pid + '"]').attr('data-price')
                 var unit = $('#products option[value="' + pid + '"]').attr('data-unit')
                 var product_name = $('#products option[value="' + pid + '"]').text()
@@ -292,6 +295,8 @@
                     }
                 })
             })
+
+
             $('#purchase-form').submit(function(e) {
                 e.preventDefault();
                 var _this = $(this)

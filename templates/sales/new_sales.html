@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<div class="col-lg-12 p-4">
+        <div class="row">
+            <div class="col-lg-12 col-12 layout-spacing">
+                <div class="statbox widget box box-shadow">
+                    <div class="widget-header">
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+
+                                <center>
+                                    <h3><strong>New Sales</strong></h3>
+                                </center>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-content widget-content-area">
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        {{ sales_form.customer|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        {{ sales_form.address|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        {{ sales_form.phone|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        {{ sales_form.warehouse|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        {{ sales_form.order_date|as_crispy_field }}
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                            <div class="panel panel-default">
+
+                                {{ formset.management_form }}
+
+                                <div id="stockitem">
+                                    <div class="panel-body">
+                                        {% for iform in formset %}
+                                        <div class="row form-row mt-4">
+                                            <div class="form-group col-md-10">
+                                                {{ iform.Product.errors }}
+                                                <label class="panel-body-text">Product:</label>
+                                                {{ iform.product }}
+                                            </div>
+
+                                             <div class="form-group col-md-2">
+                                                <label class="panel-body-text">Stock</label>
+                                                {{ iform.extra_field }}
+                                            </div>
+
+                                            <div class="form-group col-md-2">
+                                                {{ iform.quantity.errors }}
+                                                <label class="panel-body-text">Qty</label>
+                                                {{ iform.quantity }}
+                                            </div>
+
+                                            <div class="form-group col-md-2">
+                                                <label class="panel-body-text">Price</label>
+                                                {{ iform.price }}
+                                            </div>
+
+                                              <div class="form-group col-md-2">
+                                                <label class="panel-body-text">P.Qty</label>
+                                                {{ iform.packing_qty }}
+                                            </div>
+
+                                              <div class="form-group col-md-2">
+                                                <label class="panel-body-text">Packing</label>
+                                                {{ iform.packing_unit }}
+                                            </div>
+
+                                            <div class="form-group col-md-3">
+                                                <label class="panel-body-text">Amount</label>
+                                                {{ iform.amount }}
+
+                                            </div>
+                                            <div class="form-group col-md-1">
+                                                <label class="panel-body-text" style="color: #FFF">.</label>
+                                                <button class="form-control btn btn-danger remove-form-row"
+                                                        id="id_remove_form_button">x</button>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                        <div style="text-align: right;">
+                                            <a href="#" class="add-form-row">+ Add More</a>
+                                        </div>
+
+                                        <br>
+                                        <div class="subtotal-details">
+                                            <div class="subtotal_data">
+
+                                                <div class="row mb-4">
+
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            {{ sales_form.quantity|as_crispy_field }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            {{ sales_form.total_amount|as_crispy_field }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            {{ sales_form.paid_amount|as_crispy_field }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            {{ sales_form.due_amount|as_crispy_field }}
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary ">New Sales</button>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+</div>
+
+<script src="{% static 'sales/assets/js/new_sales.js' %}" type="text/javascript"></script>
+
+
+{% endblock content %}

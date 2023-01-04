@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from designreset.com/cork/ltr/demo4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 30 Aug 2020 19:53:43 GMT -->
+
+<!-- Mirrored from sciencediarybd.com/soft/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Sep 2021 13:13:07 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title>Resort & Restaurent </title>
+
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico"/>
+    <link href="{% static 'sales/assets/css/loader.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="{% static 'sales/assets/js/loader.js' %}"></script>
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link href="{% static 'sales/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'sales/assets/css/plugins.css' %}" rel="stylesheet" type="text/css"/>
+
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <link href="{% static 'sales/plugins/apex/apexcharts.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'sales/assets/css/dashboard/dash_1.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+
+    <!--Data Table Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js" defer></script>
+
+    <!-- Data Table Style -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"
+            defer></script>
+      <!-- Search dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"  rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css"  rel="stylesheet" >
+
+
+
+</head>
+<body>
+<!-- BEGIN LOADER -->
+<div id="load_screen">
+    <div class="loader">
+        <div class="loader-content">
+            <div class="spinner-grow align-self-center"></div>
+        </div>
+    </div>
+</div>
+<!--  END LOADER -->
+
+<!--  BEGIN NAVBAR  -->
+
+<!--  END NAVBAR  -->
+
+<!--  BEGIN NAVBAR  -->
+<div class="sub-header-container">
+
+
+
+
+</div>
+
+
+
+
+<!--  BEGIN MAIN CONTAINER  -->
+<div class="main-container  mt-4" id="container">
+
+    <div class="overlay"></div>
+    <div class="search-overlay"></div>
+
+    <!--  BEGIN SIDEBAR  -->
+
+    <!--  END SIDEBAR  -->
+    <!--  BEGIN CONTENT AREA  -->
+    <div id="content" class="main-content">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </div>
+
+    <!--  END CONTENT AREA  -->
+
+</div>
+<!-- END MAIN CONTAINER -->
+
+<!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+<script src="{% static 'sales/assets/js/libs/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'sales/bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'sales/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'sales/plugins/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+<script src="{% static 'sales/assets/js/app.js' %}"></script>
+<script>
+
+        $(document).ready(function() {
+            App.init();
+        });
+
+</script>
+
+<script src="{% static 'sales/assets/js/custom.js' %}"></script>
+<!-- END GLOBAL MANDATORY SCRIPTS -->
+
+<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+<script src="{% static 'sales/plugins/apex/apexcharts.min.js' %}"></script>
+<script src="{% static 'sales/assets/js/dashboard/dash_1.js' %}"></script>
+<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+
+
+</body>
+
+<!-- Mirrored from designreset.com/cork/ltr/demo4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 30 Aug 2020 19:54:24 GMT -->
+
+<!-- Mirrored from sciencediarybd.com/soft/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Sep 2021 13:13:24 GMT -->
+</html>
