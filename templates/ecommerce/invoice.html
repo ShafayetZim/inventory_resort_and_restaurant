@@ -107,7 +107,7 @@
                                                                                     <p class=" discount-rate">Due amount :</p>
                                                                                 </div>
                                                                                 <div class="col-sm-4 col-5">
-                                                                                    <p class="">{{sell.due}} ৳</p>
+                                                                                    <p class="">{{sell.short}} ৳</p>
                                                                                 </div>
 <!--                                                                                <div class="col-sm-8 col-7">-->
 <!--                                                                                    <p class=" discount-rate">Discount 5% :</p>-->
@@ -161,7 +161,7 @@
                                                         <a href="javascript:void(0);" class="btn btn-secondary btn-print  action-print">Print</a>
                                                     </div>
                                                     <div class="col-xl-12 col-md-3 col-sm-6">
-                                                        <a href="javascript:void(0);" class="btn btn-success btn-download">Change Status</a>
+                                                        <a href="javascript:void(0);" class="btn btn-success btn-download" data-bs-toggle="modal" data-bs-target="#exampleModal{{item.id}}" data-bs-placement="top" title="Status" data-original-title="Status">Change Status</a>
                                                     </div>
                                                     <div class="col-xl-12 col-md-3 col-sm-6">
                                                         <a href="{% url 'manage-sell-pk' sell.pk %}" class="btn btn-dark btn-edit">Edit</a>
@@ -170,6 +170,49 @@
 
                                             </div>
 
+                                        </div>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Update Status</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                          <svg> ... </svg>
+                                                        </button>
+                                                    </div>
+                                                    <form action="" id="status-form">
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="id" value="{{sell.id}}">
+                                                            <div class="mb-3">
+                                                                <label for="status" class="control-label">Status</label>
+                                                                <select type="text" id="status" name="status" class="form-select form-select-sm rounded-0" required>
+                                                                    {% if sell.status == '0' %}
+                                                                    <option value="0" selected>Pending</option>
+                                                                    {% else %}
+                                                                    <option value="0">Pending</option>
+                                                                    {% endif %}
+                                                                    {% if sell.status == '1' %}
+                                                                    <option value="1" selected>In-Progress</option>
+                                                                    {% else %}
+                                                                    <option value="1">In-Progress</option>
+                                                                    {% endif %}
+                                                                    {% if sell.status == '2' %}
+                                                                    <option value="2" selected>Done</option>
+                                                                    {% else %}
+                                                                    <option value="2">Done</option>
+                                                                    {% endif %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn btn-light-dark" data-bs-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>
+                                                            <a href=""><button type="submit" class="btn btn-primary">Save</button></a>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -188,4 +231,54 @@
 
 {% block pageScripts %}
     <script src="{% static 'src/assets/js/apps/invoice-preview.js' %}"></script>
+    <script>
+        $(function() {
+            $('#status-form').submit(function(e) {
+                e.preventDefault();
+                var _this = $(this)
+                $('.err-msg').remove();
+                var el = $('<div>')
+                el.addClass("alert alert-danger err-msg")
+                el.hide()
+                if (_this[0].checkValidity() == false) {
+                    _this[0].reportValidity();
+                    return false;
+                }
+
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": '{{csrf_token}}'
+                    },
+                    url: "{% url 'update-sale-status' %}",
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    dataType: 'json',
+                    error: err => {
+                        console.log(err)
+                        alert("An error occured", 'error');
+                        end_loader();
+                    },
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            location.reload()
+                        } else if (resp.status == 'failed' && !!resp.msg) {
+                            el.text(resp.msg)
+                        } else {
+                            el.text("An error occured", 'error');
+                            end_loader();
+                            console.err(resp)
+                        }
+                        _this.prepend(el)
+                        el.show('slow')
+                        $("html, body, .modal").scrollTop(0);
+                        end_loader()
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock pageScripts %}
