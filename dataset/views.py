@@ -2,9 +2,14 @@ import json
 import datetime
 from email import message
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from dataset import models, forms
 from django.contrib import messages
 from django.http import HttpResponse
+from django.db.models import Q, Sum
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView
 
 
 def context_data(request):
@@ -24,13 +29,53 @@ def context_data(request):
     return context
 
 
+@login_required()
 def dashboard(request):
     context = context_data(request)
     context['title'] = 'Dashboard'
     context['nav_bar'] = "dashboard"
+    context['products'] = models.Product.objects.count()
+
+    context['stock'] = models.Product.objects.all()
+    available = 0
+    for item in context['stock']:
+        available += item.available()
+    context['available'] = available
+
+    context['low_stock'] = models.Product.objects.all()
+    count = 0
+    for item in context['low_stock']:
+        if item.available() < 40:
+            count = count + 1
+    context['count'] = count
+
+    context['sell'] = models.SellSet.objects.filter(date=datetime.date.today())
+    sell = 0
+    due = 0
+    for item in context['sell']:
+        sell += item.total_amount
+        due += item.due
+    context['sell'] = sell
+    context['due'] = due
+
+    date = datetime.datetime.now()
+    year = date.strftime('%Y')
+    month = date.strftime('%m')
+    day = date.strftime('%d')
+    context['month_sell'] = models.SellSet.objects.filter(date_added__month=month,
+                                                          date_added__year=year
+                                                          ).aggregate(Sum('total_amount'))['total_amount__sum']
+    context['month_due'] = models.SellSet.objects.filter(date_added__month=month,
+                                                         date_added__year=year
+                                                         )
+    short = 0
+    for item in context['month_due']:
+        short += item.short()
+    context['short'] = short
     return render(request, 'index.html', context)
 
 
+@login_required()
 def brand(request):
     context = context_data(request)
     context['title'] = "Brand"
@@ -68,6 +113,7 @@ def save_brand(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_brand(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Brand'
@@ -80,6 +126,7 @@ def manage_brand(request, pk=None):
     return render(request, 'manage_brand.html', context)
 
 
+@login_required()
 def delete_brand(request, pk):
     if request.method == 'GET':
         instance = models.Brand.objects.get(pk=pk)
@@ -89,6 +136,7 @@ def delete_brand(request, pk):
         return redirect('brand-page')
 
 
+@login_required()
 def package(request):
     context = context_data(request)
     context['title'] = "Package"
@@ -126,6 +174,7 @@ def save_package(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_package(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Package'
@@ -138,6 +187,7 @@ def manage_package(request, pk=None):
     return render(request, 'manage_package.html', context)
 
 
+@login_required()
 def delete_package(request, pk):
     if request.method == 'GET':
         instance = models.Package.objects.get(pk=pk)
@@ -147,6 +197,7 @@ def delete_package(request, pk):
         return redirect('package-page')
 
 
+@login_required()
 def unit_set(request):
     context = context_data(request)
     context['title'] = "Unit Set"
@@ -184,6 +235,7 @@ def save_unit_set(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_unit_set(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Unit Set'
@@ -196,6 +248,7 @@ def manage_unit_set(request, pk=None):
     return render(request, 'manage_unit_set.html', context)
 
 
+@login_required()
 def delete_unit_set(request, pk):
     if request.method == 'GET':
         instance = models.UnitSet.objects.get(pk=pk)
@@ -205,6 +258,7 @@ def delete_unit_set(request, pk):
         return redirect('unit-set-page')
 
 
+@login_required()
 def unit_value(request):
     context = context_data(request)
     context['title'] = "Unit Value"
@@ -242,6 +296,7 @@ def save_unit_value(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_unit_value(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Unit Value'
@@ -255,6 +310,7 @@ def manage_unit_value(request, pk=None):
     return render(request, 'manage_unit_value.html', context)
 
 
+@login_required()
 def delete_unit_value(request, pk):
     if request.method == 'GET':
         instance = models.UnitValue.objects.get(pk=pk)
@@ -264,6 +320,7 @@ def delete_unit_value(request, pk):
         return redirect('unit-value-page')
 
 
+@login_required()
 def product(request):
     context = context_data(request)
     context['title'] = "Product"
@@ -301,6 +358,7 @@ def save_product(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_product(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Product'
@@ -317,6 +375,7 @@ def manage_product(request, pk=None):
     return render(request, 'manage_product.html', context)
 
 
+@login_required()
 def delete_product(request, pk):
     if request.method == 'GET':
         instance = models.Product.objects.get(pk=pk)
@@ -326,6 +385,7 @@ def delete_product(request, pk):
         return redirect('product-page')
 
 
+@login_required()
 def view_product(request, pk=None):
     context = context_data(request)
     context['title'] = 'Product View'
@@ -338,6 +398,7 @@ def view_product(request, pk=None):
     return render(request, 'view_product.html', context)
 
 
+@login_required()
 def load_unit(request):
     unit_id = request.GET.get('unit')
     values = models.UnitValue.objects.filter(unit_id=unit_id).order_by('value')
@@ -345,6 +406,7 @@ def load_unit(request):
     return render(request, 'dropdown_unit.html', context)
 
 
+@login_required()
 def purchase(request):
     context = context_data(request)
     context['title'] = 'Purchase'
@@ -384,6 +446,7 @@ def save_purchase(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_purchase(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Purchase'
@@ -400,6 +463,7 @@ def manage_purchase(request, pk=None):
     return render(request, 'ecommerce/manage_purchase.html', context)
 
 
+@login_required()
 def view_purchase(request, pk=None):
     context = context_data(request)
     context['title'] = 'View Purchase'
@@ -415,6 +479,7 @@ def view_purchase(request, pk=None):
     return render(request, 'ecommerce/view_purchase.html', context)
 
 
+@login_required()
 def delete_purchase(request, pk):
     if request.method == 'GET':
         instance = models.PurchaseSet.objects.get(pk=pk)
@@ -424,6 +489,7 @@ def delete_purchase(request, pk):
         return redirect('purchase-page')
 
 
+@login_required()
 def sell(request):
     context = context_data(request)
     context['title'] = 'Sell'
@@ -463,6 +529,7 @@ def save_sell(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+@login_required()
 def manage_sell(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Sell'
@@ -478,6 +545,7 @@ def manage_sell(request, pk=None):
     return render(request, 'ecommerce/manage_sell.html', context)
 
 
+@login_required()
 def view_sell(request, pk=None):
     context = context_data(request)
     context['title'] = 'View Sell'
@@ -492,6 +560,7 @@ def view_sell(request, pk=None):
     return render(request, 'view_sell.html', context)
 
 
+@login_required()
 def delete_sell(request, pk):
     if request.method == 'GET':
         instance = models.SellSet.objects.get(pk=pk)
@@ -501,6 +570,7 @@ def delete_sell(request, pk):
         return redirect('sell-page')
 
 
+@login_required()
 def view_invoice(request, pk=None):
     context = context_data(request)
     context['title'] = 'View Sell'
@@ -513,3 +583,144 @@ def view_invoice(request, pk=None):
         context['pitems'] = models.SellItem.objects.filter(sell__id=pk).all()
 
     return render(request, 'ecommerce/invoice.html', context)
+
+
+@login_required
+def update_transaction_form(request, pk=None):
+    context = context_data(request)
+    context['page'] = 'update_sell'
+    context['title'] = 'Update Status'
+    if pk is None:
+        context['sell'] = {}
+    else:
+        context['sell'] = models.SellSet.objects.get(id=pk)
+
+    return render(request, 'ecommerce/update_status.html', context)
+
+
+def update_transaction_status(request):
+    resp = {'status': 'failed', 'msg': ''}
+    if request.POST['id'] is None:
+        resp['msg'] = 'Transaction ID is invalid'
+    else:
+        try:
+            models.SellSet.objects.filter(pk=request.POST['id']).update(status=request.POST['status'])
+            messages.success(request, "Transaction Status has been updated successfully.")
+            resp['status'] = 'success'
+        except:
+            resp['msg'] = "Updating Transaction Failed"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+@login_required()
+def low_stock(request):
+    context = context_data(request)
+    context['title'] = 'View Low Stock'
+    context['nav_bar'] = 'dashboard'
+    context['pitems'] = models.Product.objects.all()
+    return render(request, 'low_stock.html', context)
+
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None and user.is_active:
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            messages.info(request, 'Username OR Password is incorrect')
+
+    context = {}
+    return render(request, 'authentication/login.html', context)
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = forms.UserUpdateForm(request.POST, instance=request.user)
+        p_form = forms.ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.profile)
+
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile')
+
+    else:
+        u_form = forms.UserUpdateForm(instance=request.user)
+        p_form = forms.ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form,
+        'title': "Edit Profile",
+        'nav_bar': "profile"
+    }
+    return render(request, 'authentication/profile.html', context)
+
+
+@login_required()
+def register(request):
+    if request.method == 'POST':
+        form = forms.UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, f'Account has been created! S/He Can login now.')
+            return redirect('all-users')
+
+    else:
+        form = forms.UserRegisterForm()
+
+    context = {
+        'form': form,
+        'title': 'New User',
+        'nav_bar': 'new_user',
+    }
+    return render(request, 'authentication/register.html', context)
+
+
+@login_required()
+def user_list(request):
+    context = context_data(request)
+    context['title'] = 'User List'
+    context['nav_bar'] = 'user_list'
+    context['items'] = models.User.objects.filter(is_superuser=False).all().order_by('-id')
+    return render(request, 'authentication/user_list.html', context)
+
+
+@login_required()
+def user_delete(request, id):
+    if request.method == 'GET':
+        instance = models.User.objects.get(id=id)
+        models.User.objects.filter(id=instance.id).delete()
+        instance.delete()
+        messages.add_message(request, messages.WARNING, 'Delete Success. User has been deleted.')
+        return redirect('all-users')
+
+
+class UserUpdateView(UpdateView):
+    model = models.User
+    form_class = forms.UpdateUser
+    success_url = reverse_lazy('all-users')
+    template_name = 'authentication/update_user.html'
+    success_message = "User was updated successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "User Information"
+        context["nav_bar"] = "user_list"
+        return context
+

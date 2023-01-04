@@ -7,6 +7,14 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('', views.dashboard, name="dashboard"),
+    # crud urls for authentication
+    path('login', views.login_user, name='login'),
+    path('logout', views.logout_user, name='logout'),
+    path('profile', views.profile, name='profile'),
+    path('register', views.register, name='register'),
+    path('all_user', views.user_list, name="all-users"),
+    path('user_delete/<int:id>', views.user_delete, name="user-delete"),
+    path('update_user/<int:pk>', views.UserUpdateView.as_view(), name='update_user'),
     # crud urls for brand
     path('brand', views.brand, name='brand-page'),
     path('manage_brand', views.manage_brand, name='manage-brand'),
@@ -58,4 +66,8 @@ urlpatterns = [
     path('view_sell/<int:pk>', views.view_sell, name='view-sell-pk'),
     path('view_invoice', views.view_invoice, name='view-invoice'),
     path('view_invoice/<int:pk>', views.view_invoice, name='view-invoice-pk'),
+    path('update_transaction_form/<int:pk>', views.update_transaction_form, name='transacton-update-status'),
+    path('update_transaction_status', views.update_transaction_status, name='update-sale-status'),
+    # report
+    path('low_stock', views.low_stock, name='low-stock'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
