@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block pageStyles %}
+    <link href="{% static 'src/assets/css/light/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/dark/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="container">
+                <div class="container">
+
+                    <!-- BREADCRUMB -->
+                    <div class="page-meta">
+                        <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">User</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- /BREADCRUMB -->
+
+                    <div class="row mt-2">
+
+                        <div id="flFormsGrid" class="col-lg-12 layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Add User</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content widget-content-area text-center">
+                                    <form action="" id="user-form" method="post">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col text-start">
+                                                {{ form.first_name|as_crispy_field }}
+                                            </div>
+                                            <div class="col text-start">
+                                                {{ form.last_name|as_crispy_field }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col text-start">
+                                                {{ form.username|as_crispy_field }}
+                                            </div>
+                                            <div class="col text-start">
+                                                {{ form.email|as_crispy_field }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col text-start">
+                                                {{ form.password1|as_crispy_field }}
+                                            </div>
+                                            <div class="col text-start">
+                                                {{ form.password2|as_crispy_field }}
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success mb-2 mt-3 btn-lg">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/plugins/src/highlight/highlight.pack.js' %}"></script>
+    <script src="{% static 'src/assets/js/scrollspyNav.js' %}"></script>
+{% endblock pageScripts %}
