@@ -54,6 +54,20 @@
   --box-shadow-color: rgba(30,144,255, 0.48);
 }
 
+.brown{
+  --bg-color: #E59866;
+  --bg-color-light: #FBEEE6;
+  --text-color-hover: #4C5656;
+  --box-shadow-color: rgba(110, 44, 0, 0.48);
+}
+
+.gray{
+  --bg-color: #99A3A4;
+  --bg-color-light: #EAECEE;
+  --text-color-hover: #4C5656;
+  --box-shadow-color: rgba(23, 32, 42, 0.48);
+}
+
 .card {
   width: 220px;
   height: 250px;
