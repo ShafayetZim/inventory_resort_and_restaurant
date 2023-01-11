@@ -81,6 +81,10 @@ class Product(models.Model):
 
         return float(stockin - stockout)
 
+    def stock_value(self):
+        value = self.available() * self.buy_price
+        return value
+
     class Meta:
         verbose_name_plural = "Product Set"
 
