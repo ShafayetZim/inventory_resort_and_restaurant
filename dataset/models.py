@@ -89,10 +89,77 @@ class Product(models.Model):
         verbose_name_plural = "Product Set"
 
 
+class Shop(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(f"{self.name}")
+
+    def due(self):
+        try:
+            purchase = PurchaseSet.objects.filter(shop__id=self.id, status=0).aggregate(Sum('total_amount'))
+            purchase = purchase['total_amount__sum']
+        except:
+            purchase = 0
+        try:
+            paid = PaymentItem.objects.filter(shop__id=self.id).aggregate(Sum('total_amount'))
+            paid = paid['total_amount__sum']
+        except:
+            paid = 0
+
+        purchase = purchase if not purchase is None else 0
+        paid = paid if not paid is None else 0
+
+        return float(purchase - paid)
+
+    class Meta:
+        verbose_name_plural = "Shop"
+
+
+class Pay(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(f"{self.name}")
+
+    class Meta:
+        verbose_name_plural = "Pay Due"
+
+
+class PaymentSet(models.Model):
+    code = models.CharField(max_length=100)
+    total_amount = models.FloatField(max_length=10)
+    date_added = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(auto_now=True)
+    date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return str(f"{self.code}")
+
+    class Meta:
+        verbose_name_plural = "Payment Set"
+
+
+class PaymentItem(models.Model):
+    payment = models.ForeignKey(PaymentSet, on_delete=models.CASCADE, related_name="payment_fk")
+    shop = models.ForeignKey(Shop, on_delete=models.DO_NOTHING, related_name="shop_fk2")
+    note = models.CharField(max_length=250, blank=True, null=True)
+    amount = models.FloatField(max_length=10)
+    total_amount = models.FloatField(max_length=10)
+    date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return str(f"{self.payment.code} - {self.shop.name}")
+
+    class Meta:
+        verbose_name_plural = "Payment Item"
+
+
 class PurchaseSet(models.Model):
     code = models.CharField(max_length=100)
+    shop = models.ForeignKey(Shop, on_delete=models.DO_NOTHING, null=True, related_name='shop_fk')
     status = models.CharField(max_length=3,
-                              choices=(('0', 'Pending'), ('1', 'In-progress'), ('2', 'Done')),
+                              choices=(('0', 'Due'), ('1', 'Paid')),
                               default=0)
     total_amount = models.FloatField(max_length=10)
     paid = models.FloatField(max_length=10)
@@ -103,6 +170,22 @@ class PurchaseSet(models.Model):
 
     def __str__(self):
         return str(f"{self.code}")
+
+    def product_total(self):
+        try:
+            items = PurchaseItem.objects.filter(purchase=self).aggregate(Sum('total_amount'))
+            items = items['total_amount__sum']
+        except:
+            items = 0
+        return float(items)
+
+    def payment_total(self):
+        try:
+            deposits = PurchasePayment.objects.filter(purchase=self).aggregate(Sum('total_amount'))
+            deposits = deposits['total_amount__sum']
+        except:
+            deposits = 0
+        return float(deposits)
 
     class Meta:
         verbose_name_plural = "Purchase Set"
@@ -124,11 +207,34 @@ class PurchaseItem(models.Model):
         verbose_name_plural = "Purchase Item"
 
 
+class PurchasePayment(models.Model):
+    purchase = models.ForeignKey(PurchaseSet, on_delete=models.CASCADE, related_name="purchase_fk2")
+    pay = models.ForeignKey(Pay, on_delete=models.DO_NOTHING, related_name="pay_fk")
+    note = models.CharField(max_length=250, blank=True, null=True)
+    amount = models.FloatField(max_length=10)
+    total_amount = models.FloatField(max_length=10)
+    date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return str(f"{self.purchase.code} - {self.pay.name}")
+
+    class Meta:
+        verbose_name_plural = "Purchase Payment"
+
+
+class Client(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(f"{self.name}")
+
+    class Meta:
+        verbose_name_plural = "Client"
+
+
 class SellSet(models.Model):
     code = models.CharField(max_length=100)
-    client = models.CharField(max_length=2,
-                              choices=(('1', 'Resort'), ('2', 'Restaurant')),
-                              default=1)
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, null=True, related_name='client_fk')
     status = models.CharField(max_length=3,
                               choices=(('0', 'Pending'), ('1', 'In-progress'), ('2', 'Done')),
                               default=0)
