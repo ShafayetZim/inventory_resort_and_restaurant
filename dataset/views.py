@@ -81,7 +81,7 @@ def brand(request):
     context['title'] = "Brand"
     context['nav_bar'] = "brand_list"
     context['brands'] = models.Brand.objects.all()
-    return render(request, 'brand.html', context)
+    return render(request, 'dataset/brand.html', context)
 
 
 def save_brand(request):
@@ -123,7 +123,7 @@ def manage_brand(request, pk=None):
     else:
         context['brand'] = models.Brand.objects.get(id=pk)
 
-    return render(request, 'manage_brand.html', context)
+    return render(request, 'dataset/manage_brand.html', context)
 
 
 @login_required()
@@ -142,7 +142,7 @@ def package(request):
     context['title'] = "Package"
     context['nav_bar'] = "package_list"
     context['packages'] = models.Package.objects.all()
-    return render(request, 'package.html', context)
+    return render(request, 'dataset/package.html', context)
 
 
 def save_package(request):
@@ -184,7 +184,7 @@ def manage_package(request, pk=None):
     else:
         context['package'] = models.Package.objects.get(id=pk)
 
-    return render(request, 'manage_package.html', context)
+    return render(request, 'dataset/manage_package.html', context)
 
 
 @login_required()
@@ -203,7 +203,7 @@ def unit_set(request):
     context['title'] = "Unit Set"
     context['nav_bar'] = "unit_sets"
     context['unit_sets'] = models.UnitSet.objects.all()
-    return render(request, 'unit_set.html', context)
+    return render(request, 'dataset/unit_set.html', context)
 
 
 def save_unit_set(request):
@@ -245,7 +245,7 @@ def manage_unit_set(request, pk=None):
     else:
         context['unit_set'] = models.UnitSet.objects.get(id=pk)
 
-    return render(request, 'manage_unit_set.html', context)
+    return render(request, 'dataset/manage_unit_set.html', context)
 
 
 @login_required()
@@ -264,7 +264,7 @@ def unit_value(request):
     context['title'] = "Unit Value"
     context['nav_bar'] = "unit_values"
     context['unit_values'] = models.UnitValue.objects.all()
-    return render(request, 'unit_value.html', context)
+    return render(request, 'dataset/unit_value.html', context)
 
 
 def save_unit_value(request):
@@ -307,7 +307,7 @@ def manage_unit_value(request, pk=None):
     else:
         context['unit_value'] = models.UnitValue.objects.get(id=pk)
 
-    return render(request, 'manage_unit_value.html', context)
+    return render(request, 'dataset/manage_unit_value.html', context)
 
 
 @login_required()
@@ -326,7 +326,16 @@ def product(request):
     context['title'] = "Product"
     context['nav_bar'] = "product_list"
     context['products'] = models.Product.objects.all()
-    return render(request, 'product.html', context)
+    return render(request, 'product/product.html', context)
+
+
+@login_required()
+def print_product(request):
+    context = context_data(request)
+    context['title'] = "Product"
+    context['nav_bar'] = "product_list"
+    context['products'] = models.Product.objects.all()
+    return render(request, 'product/print_product.html', context)
 
 
 def save_product(request):
@@ -372,7 +381,7 @@ def manage_product(request, pk=None):
     else:
         context['product'] = models.Product.objects.get(id=pk)
 
-    return render(request, 'manage_product.html', context)
+    return render(request, 'product/manage_product.html', context)
 
 
 @login_required()
@@ -395,7 +404,7 @@ def view_product(request, pk=None):
     else:
         context['product'] = models.Product.objects.get(id=pk)
 
-    return render(request, 'view_product.html', context)
+    return render(request, 'product/view_product.html', context)
 
 
 @login_required()
@@ -403,7 +412,67 @@ def load_unit(request):
     unit_id = request.GET.get('unit')
     values = models.UnitValue.objects.filter(unit_id=unit_id).order_by('value')
     context = {'values': values}
-    return render(request, 'dropdown_unit.html', context)
+    return render(request, 'product/dropdown_unit.html', context)
+
+
+@login_required()
+def shop(request):
+    context = context_data(request)
+    context['title'] = "Shop"
+    context['nav_bar'] = "shop_list"
+    context['shops'] = models.Shop.objects.all()
+    return render(request, 'ecommerce/shop.html', context)
+
+
+def save_shop(request):
+    resp = {'status': 'failed', 'msg': ''}
+    if request.method == 'POST':
+        post = request.POST
+        if not post['id'] == '':
+            shop = models.Shop.objects.get(id=post['id'])
+            form = forms.SaveShop(request.POST, instance=shop)
+        else:
+            form = forms.SaveShop(request.POST)
+
+        if form.is_valid():
+            form.save()
+            if post['id'] == '':
+                messages.success(request, "Shop has been saved successfully.")
+            else:
+                messages.success(request, "Shop has been updated successfully.")
+            resp['status'] = 'success'
+        else:
+            for field in form:
+                for error in field.errors:
+                    if not resp['msg'] == '':
+                        resp['msg'] += str('<br/>')
+                    resp['msg'] += str(f'[{field.name}] {error}')
+    else:
+        resp['msg'] = "There's no data sent on the request"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+@login_required()
+def manage_shop(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'Manage Shop'
+    context['nav_bar'] = 'manage_shop'
+    if pk is None:
+        context['shop'] = {}
+    else:
+        context['shop'] = models.Shop.objects.get(id=pk)
+    return render(request, 'ecommerce/manage_shop.html', context)
+
+
+@login_required()
+def delete_shop(request, pk):
+    if request.method == 'GET':
+        instance = models.Shop.objects.get(pk=pk)
+        models.Shop.objects.filter(pk=instance.pk).delete()
+        instance.delete()
+        messages.add_message(request, messages.SUCCESS, 'Shop has been deleted successfully.')
+        return redirect('shop-page')
 
 
 @login_required()
@@ -451,14 +520,18 @@ def manage_purchase(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Purchase'
     context['nav_bar'] = 'manage_purchase'
+    context['shop'] = models.Shop.objects.all()
     context['products'] = models.Product.objects.all()
+    context['payments'] = models.Pay.objects.all()
 
     if pk is None:
         context['purchase'] = {}
         context['pitems'] = {}
+        context['items'] = {}
     else:
         context['purchase'] = models.PurchaseSet.objects.get(id=pk)
         context['pitems'] = models.PurchaseItem.objects.filter(purchase__id=pk).all()
+        context['items'] = models.PurchasePayment.objects.filter(purchase__id=pk).all()
 
     return render(request, 'ecommerce/manage_purchase.html', context)
 
@@ -472,9 +545,11 @@ def view_purchase(request, pk=None):
     if pk is None:
         context['purchase'] = {}
         context['pitems'] = {}
+        context['items'] = {}
     else:
         context['purchase'] = models.PurchaseSet.objects.get(id=pk)
         context['pitems'] = models.PurchaseItem.objects.filter(purchase__id=pk).all()
+        context['items'] = models.PurchasePayment.objects.filter(purchase__id=pk).all()
 
     return render(request, 'ecommerce/view_purchase.html', context)
 
@@ -487,6 +562,149 @@ def delete_purchase(request, pk):
         instance.delete()
         messages.add_message(request, messages.SUCCESS, 'Purchase Set has been deleted successfully.')
         return redirect('purchase-page')
+
+
+@login_required()
+def payment(request):
+    context = context_data(request)
+    context['title'] = 'Payment'
+    context['nav_bar'] = 'payment_list'
+    context['payment'] = models.PaymentSet.objects.order_by('-date_added').all()
+    return render(request, 'ecommerce/payment.html', context)
+
+
+def save_payment(request):
+    resp = {'status': 'failed', 'msg': '', 'id': ''}
+    if request.method == 'POST':
+        post = request.POST
+        if not post['id'] == '':
+            payment = models.PaymentSet.objects.get(id=post['id'])
+            form = forms.SavePayment(request.POST, instance=payment)
+        else:
+            form = forms.SavePayment(request.POST)
+        if form.is_valid():
+            form.save()
+            if post['id'] == '':
+                messages.success(request, "Payment has been saved successfully.")
+                pid = models.PaymentSet.objects.last().id
+                resp['id'] = pid
+            else:
+                messages.success(request, "Payment has been updated successfully.")
+                resp['id'] = post['id']
+            resp['status'] = 'success'
+        else:
+            for field in form:
+                for error in field.errors:
+                    if not resp['msg'] == '':
+                        resp['msg'] += str('<br/>')
+                    resp['msg'] += str(f'[{field.name}] {error}')
+    else:
+        resp['msg'] = "There's no data sent on the request"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+@login_required()
+def manage_payment(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'Manage Payment'
+    context['nav_bar'] = 'manage_payment'
+    context['shop'] = models.Shop.objects.all()
+
+    if pk is None:
+        context['payment'] = {}
+        context['items'] = {}
+    else:
+        context['payment'] = models.PaymentSet.objects.get(id=pk)
+        context['items'] = models.PaymentItem.objects.filter(payment__id=pk).all()
+
+    return render(request, 'ecommerce/manage_payment.html', context)
+
+
+@login_required()
+def view_payment(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'View Payment'
+    context['nav_bar'] = 'view_payment'
+
+    if pk is None:
+        context['payment'] = {}
+        context['items'] = {}
+    else:
+        context['payment'] = models.PaymentSet.objects.get(id=pk)
+        context['items'] = models.PaymentItem.objects.filter(payment__id=pk).all()
+
+    return render(request, 'ecommerce/view_payment.html', context)
+
+
+@login_required()
+def delete_payment(request, pk):
+    if request.method == 'GET':
+        instance = models.PaymentSet.objects.get(pk=pk)
+        models.PaymentSet.objects.filter(pk=instance.pk).delete()
+        instance.delete()
+        messages.add_message(request, messages.SUCCESS, 'Payment Set has been deleted successfully.')
+        return redirect('payment-page')
+
+
+@login_required()
+def client(request):
+    context = context_data(request)
+    context['title'] = "Client"
+    context['nav_bar'] = "client_list"
+    context['clients'] = models.Client.objects.all()
+    return render(request, 'ecommerce/client.html', context)
+
+
+def save_client(request):
+    resp = {'status': 'failed', 'msg': ''}
+    if request.method == 'POST':
+        post = request.POST
+        if not post['id'] == '':
+            client = models.Client.objects.get(id=post['id'])
+            form = forms.SaveClient(request.POST, instance=shop)
+        else:
+            form = forms.SaveClient(request.POST)
+
+        if form.is_valid():
+            form.save()
+            if post['id'] == '':
+                messages.success(request, "Client has been saved successfully.")
+            else:
+                messages.success(request, "Client has been updated successfully.")
+            resp['status'] = 'success'
+        else:
+            for field in form:
+                for error in field.errors:
+                    if not resp['msg'] == '':
+                        resp['msg'] += str('<br/>')
+                    resp['msg'] += str(f'[{field.name}] {error}')
+    else:
+        resp['msg'] = "There's no data sent on the request"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+@login_required()
+def manage_client(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'Manage Client'
+    context['nav_bar'] = 'manage_Client'
+    if pk is None:
+        context['client'] = {}
+    else:
+        context['client'] = models.Client.objects.get(id=pk)
+    return render(request, 'ecommerce/manage_client.html', context)
+
+
+@login_required()
+def delete_client(request, pk):
+    if request.method == 'GET':
+        instance = models.Client.objects.get(pk=pk)
+        models.Client.objects.filter(pk=instance.pk).delete()
+        instance.delete()
+        messages.add_message(request, messages.SUCCESS, 'Client has been deleted successfully.')
+        return redirect('client-page')
 
 
 @login_required()
@@ -534,6 +752,7 @@ def manage_sell(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Sell'
     context['nav_bar'] = 'manage_sell'
+    context['client'] = models.Client.objects.all()
     context['products'] = models.Product.objects.all()
     if pk is None:
         context['sell'] = {}
@@ -619,7 +838,142 @@ def low_stock(request):
     context['title'] = 'View Low Stock'
     context['nav_bar'] = 'dashboard'
     context['pitems'] = models.Product.objects.all()
-    return render(request, 'low_stock.html', context)
+    return render(request, 'report/low_stock.html', context)
+
+
+@login_required()
+def client_report(request):
+    context = context_data(request)
+    context['title'] = 'Client Report'
+    context['nav_bar'] = 'client_report'
+    context['client'] = models.Client.objects.all()
+
+    request_data = request.GET
+    check_client = request_data.get("check_client")
+    start_date = request_data.get("start_date")
+    end_date = request_data.get("end_date")
+
+    if check_client != "All":
+        sell = models.SellSet.objects.filter(client=check_client, date__range=[start_date, end_date])
+        items = models.SellItem.objects.filter(sell__in=sell).values(
+            'product', 'product__name', 'unit_value', 'price').annotate(
+            sum=Sum('total_amount'), qty=Sum('quantity'))
+    else:
+        sell = models.SellSet.objects.filter(date__range=[start_date, end_date])
+        items = models.SellItem.objects.filter(sell__in=sell).values(
+            'product', 'product__name', 'unit_value', 'price').annotate(
+            sum=Sum('total_amount'), qty=Sum('quantity'))
+
+    context['sell'] = sell
+    context['items'] = items
+    context['start_date'] = start_date
+    context['end_date'] = end_date
+    context['check_client'] = check_client
+    print(check_client)
+
+    return render(request, 'report/client_report.html', context)
+
+
+@login_required()
+def shop_report(request):
+    context = context_data(request)
+    context['title'] = 'Shop Report'
+    context['nav_bar'] = 'shop_report'
+    context['shop'] = models.Shop.objects.all()
+
+    request_data = request.GET
+    check_shop = request_data.get("check_shop")
+    start_date = request_data.get("start_date")
+    end_date = request_data.get("end_date")
+
+    if check_shop != "All":
+        purchase_due = models.PurchaseSet.objects.filter(
+            shop=check_shop, status=0, date__range=[start_date, end_date]).values(
+            'shop', 'shop__name').annotate(sum=Sum('total_amount'))
+        purchase_paid = models.PurchaseSet.objects.filter(
+            shop=check_shop, status=1, date__range=[start_date, end_date]).values(
+            'shop', 'shop__name').annotate(sum=Sum('total_amount'))
+        payment_paid = models.PaymentItem.objects.filter(
+            shop=check_shop, date__range=[start_date, end_date]).values(
+            'shop', 'shop__name').annotate(sum=Sum('total_amount'))
+
+    else:
+        purchase_due = models.PurchaseSet.objects.filter(
+            date__range=[start_date, end_date]).values(
+            'shop', 'shop__name').annotate(sum=Sum('total_amount'))
+        purchase_paid = models.PurchaseSet.objects.filter(
+            date__range=[start_date, end_date]).values(
+            'shop', 'shop__name').annotate(sum=Sum('total_amount'))
+        payment_paid = models.PaymentItem.objects.filter(
+            date__range=[start_date, end_date]).values(
+            'shop', 'shop__name').annotate(sum=Sum('total_amount'))
+
+    context['purchase_due'] = purchase_due
+    context['purchase_paid'] = purchase_paid
+    context['payment_paid'] = payment_paid
+    context['start_date'] = start_date
+    context['end_date'] = end_date
+    context['check_shop'] = check_shop
+    print(check_shop)
+
+    return render(request, 'report/shop_report.html', context)
+
+
+@login_required()
+def purchase_report(request):
+    context = context_data(request)
+    context['title'] = 'Purchase Report'
+    context['nav_bar'] = 'purchase_report'
+    context['shop'] = models.Shop.objects.all()
+
+    request_data = request.GET
+    check_shop = request_data.get("check_shop")
+    start_date = request_data.get("start_date")
+    end_date = request_data.get("end_date")
+
+    if check_shop != "All":
+        purchase_due = models.PurchaseSet.objects.filter(
+            shop=check_shop, status=0, date__range=[start_date, end_date])
+        purchase_paid = models.PurchaseSet.objects.filter(
+            shop=check_shop, status=1, date__range=[start_date, end_date])
+        payment_paid = models.PaymentItem.objects.filter(
+            shop=check_shop, date__range=[start_date, end_date])
+
+    else:
+        purchase_due = models.PurchaseSet.objects.filter(
+            status=0, date__range=[start_date, end_date])
+        purchase_paid = models.PurchaseSet.objects.filter(
+            status=1, date__range=[start_date, end_date])
+        payment_paid = models.PaymentItem.objects.filter(
+            date__range=[start_date, end_date])
+
+    context['purchase_due'] = purchase_due
+    context['purchase_paid'] = purchase_paid
+    context['payment_paid'] = payment_paid
+
+    due = 0
+    paid = 0
+    cash = 0
+    for item in context['purchase_due']:
+        due += float(item.total_amount)
+    for item in context['purchase_paid']:
+        paid += float(item.total_amount)
+    for item in context['payment_paid']:
+        cash += float(item.total_amount)
+
+    sub_due = due + paid
+    sub_paid = paid + cash
+    total_due = due - cash
+
+    context['sub_due'] = sub_due
+    context['sub_paid'] = sub_paid
+    context['total_due'] = total_due
+    context['start_date'] = start_date
+    context['end_date'] = end_date
+    context['check_shop'] = check_shop
+    print(check_shop)
+
+    return render(request, 'report/purchase_report.html', context)
 
 
 def login_user(request):
