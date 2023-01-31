@@ -41,6 +41,7 @@ urlpatterns = [
     path('delete_unit_value/<int:pk>', views.delete_unit_value, name='delete-unit-value'),
     # crud urls for product
     path('product', views.product, name='product-page'),
+    path('product_print', views.print_product, name='product-print'),
     path('manage_product', views.manage_product, name='manage-product'),
     path('manage_product/<int:pk>', views.manage_product, name='manage-product-pk'),
     path('save_product', views.save_product, name='save-product'),
@@ -48,6 +49,12 @@ urlpatterns = [
     path('view_product', views.view_product, name='view-product'),
     path('view_product/<int:pk>', views.view_product, name='view-product-pk'),
     path('ajax/load-unit/', views.load_unit, name='ajax_load_unit'),
+    # crud urls for shop
+    path('shop', views.shop, name='shop-page'),
+    path('manage_shop', views.manage_shop, name='manage-shop'),
+    path('manage_shop/<int:pk>', views.manage_shop, name='manage-shop-pk'),
+    path('save_shop', views.save_shop, name='save-shop'),
+    path('delete_shop/<int:pk>', views.delete_shop, name='delete-shop'),
     # crud urls for purchase
     path('purchase', views.purchase, name='purchase-page'),
     path('manage_purchase', views.manage_purchase, name='manage-purchase'),
@@ -56,6 +63,20 @@ urlpatterns = [
     path('delete_purchase/<int:pk>', views.delete_purchase, name='delete-purchase'),
     path('view_purchase', views.view_purchase, name='view-purchase'),
     path('view_purchase/<int:pk>', views.view_purchase, name='view-purchase-pk'),
+    # crud urls for payment
+    path('payment', views.payment, name='payment-page'),
+    path('manage_payment', views.manage_payment, name='manage-payment'),
+    path('manage_payment/<int:pk>', views.manage_payment, name='manage-payment-pk'),
+    path('save_payment', views.save_payment, name='save-payment'),
+    path('delete_payment/<int:pk>', views.delete_payment, name='delete-payment'),
+    path('view_payment', views.view_payment, name='view-payment'),
+    path('view_payment/<int:pk>', views.view_payment, name='view-payment-pk'),
+    # crud urls for client
+    path('client', views.client, name='client-page'),
+    path('manage_client', views.manage_client, name='manage-client'),
+    path('manage_client/<int:pk>', views.manage_client, name='manage-client-pk'),
+    path('save_client', views.save_client, name='save-client'),
+    path('delete_client/<int:pk>', views.delete_client, name='delete-client'),
     # crud urls for sell
     path('sell', views.sell, name='sell-page'),
     path('manage_sell', views.manage_sell, name='manage-sell'),
@@ -66,8 +87,11 @@ urlpatterns = [
     path('view_sell/<int:pk>', views.view_sell, name='view-sell-pk'),
     path('view_invoice', views.view_invoice, name='view-invoice'),
     path('view_invoice/<int:pk>', views.view_invoice, name='view-invoice-pk'),
-    path('update_transaction_form/<int:pk>', views.update_transaction_form, name='transacton-update-status'),
+    path('update_transaction_form/<int:pk>', views.update_transaction_form, name='transaction-update-status'),
     path('update_transaction_status', views.update_transaction_status, name='update-sale-status'),
     # report
     path('low_stock', views.low_stock, name='low-stock'),
+    path('client_report', views.client_report, name='client-report'),
+    path('shop_report', views.shop_report, name='shop-report'),
+    path('purchase_report', views.purchase_report, name='purchase-report'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
