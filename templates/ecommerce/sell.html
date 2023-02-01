@@ -41,8 +41,8 @@
                                         <th class="checkbox-column text-center"> SL </th>
                                         <th>Date</th>
                                         <th>Code</th>
+                                        <th>Client</th>
                                         <th>Total</th>
-                                        <th>Paid</th>
                                         <th>Due</th>
                                         <th>Status</th>
                                         <th class="text-center dt-no-sorting">Action</th>
@@ -54,8 +54,8 @@
                                         <td class="checkbox-column text-center">{{ forloop.counter }}</td>
                                         <td>{{ item.date }}</td>
                                         <td>{{ item.code }}</td>
+                                        <td>{{ item.client }}</td>
                                         <td>{{ item.total_amount }}</td>
-                                        <td>{{ item.paid }}</td>
                                         <td>{{ item.due }}</td>
                                         <td>{{ item.get_status_display }}</td>
                                         <td class="text-center">
