@@ -65,16 +65,13 @@
                                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                             <label for="client" class="form-label ">Client</label>
                                                             <select id="client" name="client" class="form-select form-select-lg">
-                                                                <option value="">Choose...</option>
-                                                                {% if sell.client == '1' %}
-                                                                <option selected value="1">Resort</option>
-                                                                {% else %}
-                                                                <option value="1">Resort</option>
-                                                                {% endif %} {% if sell.client == '2' %}
-                                                                <option value="2" selected>Restaurant</option>
-                                                                {% else %}
-                                                                <option value="2">Restaurant</option>
+                                                                {% if sell.client %}
+                                                                <option selected value="{{sell.client.pk}}">{{sell.client}}</option>
                                                                 {% endif %}
+                                                                <option value="">Choose...</option>
+                                                                {% for item in client %}
+                                                                <option value="{{item.pk}}">{{item.name}}</option>
+                                                                {% endfor %}
                                                             </select>
                                                         </div>
                                                     </div>
