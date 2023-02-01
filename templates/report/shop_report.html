@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageStyles %}
+    <link href="{% static 'src/assets/css/light/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="layout-px-spacing">
+
+                <div class="middle-content container-xxl p-0">
+
+                    <div class="card mb-3">
+                        <div class="card-header py-1">
+                            <div class="card-title mb-0 text-center">Filter Sells Report</div>
+                        </div>
+                        <div class="card-body">
+
+                            <form method="GET">
+                                <section class="site_filter">
+                                    <div class="container-fluid">
+                                        <div class="row justify-content-center">
+
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="date">Start Date</label>
+                                                    <input type="date" class="form-control mr-sm-3" id="start_date" name="start_date"
+                                                           value={{start_date}} required>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="date">End Date</label>
+                                                    <input type="date" class="form-control mr-sm-3" id="end_date" name="end_date"
+                                                           value={{end_date}} required>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="client">Check Shop</label>
+                                                    <select class="form-control form-control-lg" id="check_shop" name="check_shop">
+                                                        <option disabled selected value="">Select Shop</option>
+                                                        <option value="All">All</option>
+                                                        {% for item in shop %}
+                                                        <option value="{{item.pk}}">{{item.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-success">View</button>
+                                    <a href="javascript:void(0);" class="btn btn-secondary btn-print  action-print">Print</a>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row invoice layout-top-spacing layout-spacing">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                            <div class="doc-container">
+
+                                <div class="row">
+
+                                    <div class="col-xl-12">
+
+                                        <div class="invoice-container">
+                                            <div class="invoice-inbox">
+
+                                                <div id="ct" class="">
+
+                                                    <div class="invoice-00001">
+                                                        <div class="content-section">
+
+                                                            <div class="inv--head-section inv--detail-section">
+
+                                                                <div class="row justify-content-center">
+
+                                                                    <div class="col-sm-6 col-12 mr-auto">
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <img class="company-logo center-block" src="{% static 'src/assets/img/eque-heritage-hotel-and-resort-logo.png' %}" alt="company">
+                                                                            <h3 class="in-heading align-self-center">Eque Heritage Hotel and Resort</h3>
+                                                                        </div>
+                                                                        <p class="inv-street-addr mt-3 text-center">Airport Road, Near By Fivestar Play Ground,
+                                                                            Saidpur-5310, Nilphamari, Bangladesh</p>
+                                                                        <p class="inv-email-address text-center">Gmail: equesheritageresort@gmail.com</p>
+                                                                        <p class="inv-email-address text-center">Reception: +88 01406-7670009</p>
+                                                                        <p class="inv-email-address text-center">Restaurant: +88 01406-767067</p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="inv--product-table-section">
+                                                                <div class="table-responsive">
+                                                                    <table class="table">
+                                                                        <thead class="">
+                                                                            <tr>
+                                                                                <th scope="col">S.No</th>
+                                                                                <th class="text-start" scope="col">Name</th>
+                                                                                <th class="text-center" scope="col">Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for item in purchase_due %}
+                                                                            <tr>
+                                                                                <td>{{forloop.counter}}</td>
+                                                                                <td class="text-start">{{item.shop__name}}</td>
+                                                                                <td>
+                                                                                    <input type="text" class="input-fields-to-sum form-control form-control-sm text-center" name="amt" id="amt" value="{{item.sum|floatformat:2}}" readonly>
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th class="text-end" colspan="2">Total amount</th>
+                                                                                <th class="text-start fw-bolder">
+                                                                                    <input type="text" class="form-control form-control-sm text-center" name="total_amt" id="total_amt" value="" readonly>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <br />
+
+                                                            <div class="inv--product-table-section">
+                                                                <div class="table-responsive">
+                                                                    <table class="table">
+                                                                        <thead class="">
+                                                                            <tr>
+                                                                                <th scope="col">S.No</th>
+                                                                                <th class="text-start" scope="col">Name</th>
+                                                                                <th class="text-center" scope="col">Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for item in payment_paid %}
+                                                                            <tr>
+                                                                                <td>{{forloop.counter}}</td>
+                                                                                <td class="text-start">{{item.shop__name}}</td>
+                                                                                <td>
+                                                                                    <input type="text" class="input-box-to-sum form-control form-control-sm text-center" name="qty" id="qty" value="{{item.sum|floatformat:2}}" readonly>
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th colspan="2" class="text-end">Total Amount</th>
+                                                                                <th class="text-start fw-bolder">
+                                                                                    <input type="text" class="form-control form-control-sm text-center" name="total_qty" id="total_qty" value="" readonly>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <br />
+
+                                                            <div class="inv--product-table-section">
+                                                                <div class="table-responsive">
+                                                                    <table class="table">
+                                                                        <thead class="">
+                                                                            <tr>
+                                                                                <th scope="col">S.No</th>
+                                                                                <th class="text-start" scope="col">Name</th>
+                                                                                <th class="text-center" scope="col">Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for item in purchase_paid %}
+                                                                            <tr>
+                                                                                <td>{{forloop.counter}}</td>
+                                                                                <td class="text-start">{{item.shop__name}}</td>
+                                                                                <td>
+                                                                                    <input type="text" class="input-area-to-sum form-control form-control-sm text-center" name="full_paid" id="full_paid" value="{{item.sum|floatformat:2}}" readonly>
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th colspan="2" class="text-end">Total Amount</th>
+                                                                                <th class="text-start fw-bolder">
+                                                                                    <input type="text" class="form-control form-control-sm text-center" name="total_full" id="total_full" value="" readonly>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="inv--note">
+
+                                                                <div class="row mt-4">
+                                                                    <div class="col-sm-12 col-12 order-sm-0 order-1">
+                                                                        <p>Note: All Rights Reserved to Eque Heritage Hotel and Resort. </p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/assets/js/apps/invoice-preview.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/tomSelect/tom-select.base.js' %}"></script>
+    <script src="{% static 'src/plugins/src/tomSelect/custom-tom-select.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+           calculateTotals();
+
+            $(".input-fields-to-sum").on('input', function() {
+                calculateTotals();
+            });
+            $(".input-box-to-sum").on('input', function() {
+                calculateTotals();
+            });
+            $(".input-area-to-sum").on('input', function() {
+                calculateTotals();
+            });
+        });
+
+        function calculateTotals() {
+           // walk on input fields with class, calculate sum and put it in total field
+           // input can contain invalid numbers, handle errors when parsing
+            var arr1 = document.getElementsByClassName('input-fields-to-sum');
+            var arr2 = document.getElementsByClassName('input-box-to-sum');
+            var arr3 = document.getElementsByClassName('input-area-to-sum');
+
+            var tot1=0;
+            var tot2=0;
+            var tot3=0;
+
+            for(var i=0;i<arr1.length;i++){
+                if(parseFloat(arr1[i].value))
+                    tot1 += parseFloat(arr1[i].value);
+            }
+            for(var i=0;i<arr2.length;i++){
+                if(parseFloat(arr2[i].value))
+                    tot2 += parseFloat(arr2[i].value);
+            }
+            for(var i=0;i<arr3.length;i++){
+                if(parseFloat(arr3[i].value))
+                    tot3 += parseFloat(arr3[i].value);
+            }
+
+            $("#total_amt").val(tot1);
+            $("#total_qty").val(tot2);
+            $("#total_full").val(tot3);
+        }
+
+        function parseNumber(str, defaultValue) {
+            if (str !== undefined && str.length) {
+                var parsed = parseFloat(str.replace(',','.').replace(/\s/g,'').replace(/\&nbsp\;/g,''));
+                if (isNaN(parsed)) return defaultValue;
+                return parsed;
+            }
+            return defaultValue;
+        }
+
+        // Select Box
+        new TomSelect("#check_shop",{
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc",
+            }
+        });
+    </script>
+{% endblock pageScripts %}
