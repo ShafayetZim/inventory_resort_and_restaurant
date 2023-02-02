@@ -55,7 +55,9 @@
 
                                                             <div class="inv--product-table-section">
                                                                 <div class="table-responsive">
+
                                                                     <table class="table">
+                                                                        <p class="text-center">Item List</p>
                                                                         <thead class="">
                                                                             <tr>
                                                                                 <th scope="col">S.No</th>
@@ -84,7 +86,7 @@
 
                                                             <div class="inv--total-amounts">
 
-                                                                <div class="row mt-4">
+                                                                <div class="row">
                                                                     <div class="col-sm-5 col-12 order-sm-0 order-1">
                                                                     </div>
                                                                     <div class="col-sm-7 col-12 order-sm-1 order-0">
@@ -94,11 +96,64 @@
                                                                                     <p class="">Sub Total :</p>
                                                                                 </div>
                                                                                 <div class="col-sm-4 col-5">
-                                                                                    <p class="">{{purchase.total_amount}} ৳</p>
+                                                                                    <p class="">{{purchase.product_total}} ৳</p>
                                                                                 </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            {% if items %}
+                                                            <div class="inv--product-table-section">
+                                                                <div class="table-responsive">
+                                                                    <table class="table">
+                                                                        <p class="text-center">Payment List</p>
+                                                                        <thead class="">
+                                                                            <tr>
+                                                                                <th scope="col">S.No</th>
+                                                                                <th scope="col">Items</th>
+                                                                                <th class="text-center" scope="col">Note</th>
+                                                                                <th class="text-center" scope="col">Date</th>
+                                                                                <th class="text-end" scope="col">Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for item in items %}
+                                                                            <tr>
+                                                                                <td>{{forloop.counter}}</td>
+                                                                                <td>{{item.pay}}</td>
+                                                                                <td class="text-center">{% if item.note %}{{item.note}}{% else %}N/A{% endif %}</td>
+                                                                                <td class="text-center">{{item.date}}</td>
+                                                                                <td class="text-end">{{item.amount}}</td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+
+                                                            <div class="inv--total-amounts">
+
+                                                                <div class="row">
+                                                                    <div class="col-sm-5 col-12 order-sm-0 order-1">
+                                                                    </div>
+                                                                    <div class="col-sm-7 col-12 order-sm-1 order-0">
+                                                                        <div class="text-sm-end">
+                                                                            <div class="row">
+                                                                                {% if items %}
+                                                                                <div class="col-sm-8 col-7">
+                                                                                    <p class="">Sub Total :</p>
+                                                                                </div>
+                                                                                <div class="col-sm-4 col-5">
+                                                                                    <p class="">{{purchase.payment_total}} ৳</p>
+                                                                                </div>
+                                                                                {% endif %}
 
                                                                                 <div class="col-sm-8 col-7 grand-total-title mt-3">
-                                                                                    <h4 class="">Grand Total : </h4>
+                                                                                    <h4 class="">Due Total : </h4>
                                                                                 </div>
                                                                                 <div class="col-sm-4 col-5 grand-total-amount mt-3">
                                                                                     <h4 class="">{{purchase.total_amount}} ৳</h4>
