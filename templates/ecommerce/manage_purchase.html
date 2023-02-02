@@ -143,13 +143,14 @@
                                                             <tr>
                                                                 <td class="px-2 py-1 align-middle text-center">
                                                                     <input type="hidden" name="product_id[]" value="{{pitem.product.id}}">
-                                                                    <input type="hidden" name="product_price[]" value="{{pitem.price}}">
                                                                     <input type="hidden" name="product_unit[]" value="{{pitem.unit_value}}">
                                                                     <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
                                                                 </td>
                                                                 <td class="px-2 py-1 align-middle product_type">{{pitem.product.name}}</td>
                                                                 <td class="px-2 py-1 align-middle text-center product_unit">{{pitem.unit_value}}</td>
-                                                                <td class="px-2 py-1 align-middle text-center product_price">{{pitem.price|floatformat}}</td>
+                                                                <td class="px-2 py-1 align-middle text-center">
+                                                                    <input type="number" step="0.01" name="product_price[]" value="{{pitem.price}}" class="form-control form-control-sm text-center">
+                                                                </td>
                                                                 <td class="px-2 py-1 align-middle">
                                                                     <input type="number" min="1" value="{{pitem.quantity|floatformat}}" class="form-control form-control-sm text-center" name="product_quantity[]" required>
                                                                 </td>
@@ -272,13 +273,14 @@
                 <tr>
                     <td class="px-2 py-1 align-middle text-center">
                         <input type="hidden" name="product_id[]" value="">
-                        <input type="hidden" name="product_price[]" value="">
                         <input type="hidden" name="product_unit[]" value="">
                         <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
                     </td>
                     <td class="px-2 py-1 align-middle product_type"></td>
                     <td class="px-2 py-1 align-middle text-center product_unit"></td>
-                    <td class="px-2 py-1 align-middle text-center product_price">0.00</td>
+                    <td class="px-2 py-1 align-middle text-center">
+                        <input type="number" step="0.01" name="product_price[]" value="" class="form-control form-control-sm text-center">
+                    </td>
                     <td class="px-2 py-1 align-middle">
                         <input type="number" min="1" value="1" class="form-control form-control-sm text-center" name="product_quantity[]" required>
                     </td>
@@ -411,6 +413,9 @@
             $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
                 calc_total()
             })
+            $('#product_list tbody').find('[name="product_price[]"]').on('input change', function() {
+                calc_total()
+            })
             $('#product_list tbody').find('.rem-product').click(function() {
                 if (confirm("Are you sure to remove this item?") == true) {
                     $(this).closest('tr').remove()
@@ -437,6 +442,11 @@
                 calc_total()
                 $('#products').val('').trigger('change')
                 tr.find('[name="product_quantity[]"]').on('input change', function() {
+                    calc_total()
+                })
+                calc_total()
+                $('#products').val('').trigger('change')
+                tr.find('[name="product_price[]"]').on('input change', function() {
                     calc_total()
                 })
                 tr.find('.rem-product').click(function() {
