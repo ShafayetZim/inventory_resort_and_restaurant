@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block pageStyles %}
+    <link rel="{% static 'stylesheet" href="src/plugins/src/font-icons/fontawesome/css/regular.css' %}">
+    <link rel="{% static 'stylesheet" href="src/plugins/src/font-icons/fontawesome/css/fontawesome.css' %}">
+
+    <link href="{% static 'src/assets/css/light/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/light/components/font-icons.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'src/assets/css/dark/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/components/font-icons.css' %}" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="container">
+                <div class="container">
+
+                    <!-- BREADCRUMB -->
+                    <div class="page-meta">
+                        <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Payment</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- /BREADCRUMB -->
+
+                    <div class="row mt-2">
+
+                        <div id="flFormsGrid" class="col-lg-12 layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Add Payment</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content widget-content-area text-center">
+                                    <form action="" id="payment-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{payment.id}}" />
+                                        <input type="hidden" name="code" value="{% if payment.code  %}{{payment.code}}{% else %}generate{% endif %}">
+                                        <input type="hidden" name="total_amount" value="{% if payment.total_amount  %}{{payment.total_amount}}{% else %}0{% endif %}">
+
+                                        {% if payment.code %}
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="card-title py-1">Payment Details</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <label for="" class="control-label">Transaction Code: {{payment.code}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="card-title py-1">Payment List</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row align-items-end text-start">
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <label for="payments" class="control-label">Shops</label>
+                                                            <select id="payments" class="form-select form-select-lg">
+                                                                <option value="" disabled selected></option>
+                                                                {% for item in shop %}
+                                                                <option value="{{item.pk}}" data-due="{{item.due}}">{{item.name}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <button class="btn btn-primary btn-sm-0 bg-gradient bg-primary" type="button" id="add_payment"><i data-feather="plus-square"></i><span class="icon-name">+</span> Add Payment</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clear-fix mt-2"></div>
+                                                    <table class="table table-bordered" id="payment_list">
+                                                        <colgroup>
+                                                            <col width="5%">
+                                                            <col width="35%">
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                            <col width="15%">
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="p-1 text-center"></th>
+                                                                <th class="p-1 text-center">Shop</th>
+                                                                <th class="p-1 text-center">Due</th>
+                                                                <th class="p-1 text-center">Note</th>
+                                                                <th class="p-1 text-center">Date</th>
+                                                                <th class="p-1 text-center">Amount</th>
+                                                                <th class="p-1 text-center">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for pitem in items %}
+                                                            <tr>
+                                                                <td class="px-2 py-1 align-middle text-center">
+                                                                    <input type="hidden" name="shop_id[]" value="{{shop.pay.id}}">
+                                                                    <button class="btn btn-outline-danger btn-sm rem-payment" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle shop_type">{{pitem.shop.name}}</td>
+                                                                <td class="px-2 py-1 align-middle text-end shop_due">{{pitem.due}}</td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="text" value="{{pitem.note}}" class="form-control form-control-sm text-center" name="shop_note[]">
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="date" value="{{pitem.date|date:'Y-m-d' }}" class="form-control form-control-sm text-center" name="shop_date[]" required>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="number" min="0" value="{{pitem.amount|floatformat}}" class="form-control form-control-sm text-center" name="shop_price[]" required>
+                                                                </td>
+                                                                <td class="px-2 py-1 align-middle payment_total text-end">{{pitem.total_amount|floatformat}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th class="text-center" colspan="5">Total</th>
+                                                                <th class="text-end sub-total-payment">0.00</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Due Total:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <h4 class="fw-bolder pe-2 gtotal">{% if payment.total_amount %}{{payment.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-footer py-1 text-center">
+                                                <button type="submit" class="btn btn-success mb-2 mt-3 btn-md" id="pay_later">Submit</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <noscript id="payment-clone">
+                <tr>
+                    <td class="px-2 py-1 align-middle text-center">
+                        <input type="hidden" name="shop_id[]" value="">
+                        <button class="btn btn-outline-danger btn-sm rem-payment" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
+                    </td>
+                    <td class="px-2 py-1 align-middle shop_type"></td>
+                    <td class="px-2 py-1 align-middle text-center shop_due"></td>
+                    <td class="px-2 py-1 align-middle">
+                        <input type="text" class="form-control form-control-sm text-center" name="shop_note[]">
+                    </td>
+                    <td class="px-2 py-1 align-middle">
+                        <input type="date" class="form-control form-control-sm text-center" name="shop_date[]" required>
+                    </td>
+                    <td class="px-2 py-1 align-middle">
+                        <input type="number" min="0" value="0" class="form-control form-control-sm text-center" name="shop_price[]" required>
+                    </td>
+                    <td class="px-2 py-1 align-middle payment_total text-end">0.00</td>
+                </tr>
+            </noscript>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/plugins/src/highlight/highlight.pack.js' %}"></script>
+    <script src="{% static 'src/assets/js/scrollspyNav.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/tomSelect/tom-select.base.js' %}"></script>
+    <script src="{% static 'src/plugins/src/tomSelect/custom-tom-select.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/font-icons/feather/feather.min.js' %}"></script>
+
+    <!-- START BUSINESS LOGIC SCRIPTS -->
+    <script>
+        $(document).ready(function () {
+            console.log("On Page Loaded")
+            $('#products').on('change', function () {
+                console.log("On Product selected")
+            });
+        });
+
+        function calc_total() {
+
+            var sub_payment = 0
+            var gtotal = 0
+
+            $('#payment_list tbody tr').each(function() {
+                var paid = $(this).find('[name="shop_price[]"]').val()
+                var due = $(this).find('[name="shop_due[]"]').val()
+                paid = paid > 0 ? paid : 0;
+                sub_payment += parseFloat(parseFloat(paid))
+                gtotal += parseFloat(parseFloat(paid))
+                $(this).find('.payment_total').text(parseFloat(parseFloat(paid)).toLocaleString('en-US'))
+            })
+            $('.sub-total-payment').text(parseFloat(sub_payment).toLocaleString('en-US', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            }))
+            $('[name="total_amount"]').val(gtotal)
+            $('.gtotal').text(parseFloat(gtotal).toLocaleString('en-US', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            }))
+
+        }
+        $(function() {
+            calc_total()
+            $('#brand').select2({
+                placeholder: "Please Select Brand Here",
+                width: "100%",
+                selectionCssClass: "form-control form-control-sm rounded-0"
+            })
+
+            new TomSelect("#payments",{
+                create: false,
+                placeholder: "Please Select Shop Here",
+                sortField: {
+                    field: "text",
+                    direction: "asc",
+                }
+            });
+
+            $('#pay_later').click(function() {
+
+            })
+
+            $('#payment_list tbody').find('[name="shop_price[]"]').on('input change', function() {
+                calc_total()
+            })
+            $('#payment_list tbody').find('.rem-payment').click(function() {
+                if (confirm("Are you sure to remove this item?") == true) {
+                    $(this).closest('tr').remove()
+                    calc_total()
+                }
+            })
+
+            $('#add_payment').click(function() {
+                var pid = $('#payments').val()
+
+                var shop_name = $('#payments option[value="' + pid + '"]').text()
+                var due = $('#payments option[value="' + pid + '"]').attr('data-due')
+                var tr = $($('noscript#payment-clone').html()).clone()
+                tr.find('.shop_type').text(shop_name)
+                tr.find('.shop_due').text(parseFloat(due).toLocaleString('en-US'))
+                tr.find('[name="shop_id[]"]').val(pid)
+                tr.find('[name="shop_price[]"]').val()
+                tr.find('[name="shop_note[]"]').val()
+                tr.find('[name="shop_date[]"]').val()
+                tr.find('[name="shop_due[]"]').val(due)
+
+                $('#payment_list tbody').append(tr)
+                calc_total()
+                $('#payments').val('').trigger('change')
+                tr.find('[name="shop_price[]"]').on('input change', function() {
+                    calc_total()
+                })
+                tr.find('.rem-payment').click(function() {
+                    if (confirm("Are you sure to remove this item?") == true) {
+                        tr.remove()
+                        calc_total()
+                    }
+                })
+            })
+
+            $('#payment-form').submit(function(e) {
+                e.preventDefault();
+                var _this = $(this)
+                $('.err-msg').remove();
+                var el = $('<div>')
+                el.addClass("alert alert-danger err-msg")
+                el.hide()
+                if (_this[0].checkValidity() == false) {
+                    _this[0].reportValidity();
+                    return false;
+                }
+
+                $.ajax({
+                    url: '{% url "save-payment" %}',
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    dataType: 'json',
+                    error: err => {
+                        console.log(err)
+                        alert("An error occured", 'error');
+                        end_loader();
+                    },
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            location.replace('{% url "view-payment" %}/'  + resp.id)
+                        } else if (resp.status == 'failed' && !!resp.msg) {
+                            el.text(resp.msg)
+                        } else {
+                            el.text("An error occured", 'error');
+                            end_loader();
+                            console.err(resp)
+                        }
+                        _this.prepend(el)
+                        el.show('slow')
+                        $("html, body, .modal").scrollTop(0);
+                        end_loader()
+                    }
+                })
+            })
+        })
+    </script>
+    <!-- END BUSINESS LOGIC SCRIPTS -->
+
+{% endblock pageScripts %}
