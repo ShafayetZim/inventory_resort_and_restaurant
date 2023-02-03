@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageStyles %}
+    <link href="{% static 'src/assets/css/light/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="layout-px-spacing">
+
+                <div class="middle-content container-xxl p-0">
+
+                    <div class="row invoice layout-top-spacing layout-spacing">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                            <div class="doc-container">
+
+                                <div class="row">
+
+                                    <div class="col-xl-12">
+
+                                        <div class="invoice-container">
+                                            <div class="invoice-inbox">
+
+                                                <div id="ct" class="">
+
+                                                    <div class="invoice-00001">
+                                                        <div class="content-section">
+
+                                                            <div class="inv--head-section inv--detail-section">
+
+                                                                <div class="row justify-content-center">
+
+                                                                    <div class="col-sm-6 col-12 mr-auto">
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <img class="company-logo center-block" src="{% static 'src/assets/img/eque-heritage-hotel-and-resort-logo.png' %}" alt="company">
+                                                                            <h3 class="in-heading align-self-center">Eque Heritage Hotel and Resort</h3>
+                                                                        </div>
+                                                                        <p class="inv-street-addr mt-3 text-center">Airport Road, Near By Fivestar Play Ground,
+                                                                            Saidpur-5310, Nilphamari, Bangladesh</p>
+                                                                        <p class="inv-email-address text-center">Gmail: equesheritageresort@gmail.com</p>
+                                                                        <p class="inv-email-address text-center">Reception: +88 01406-767000</p>
+                                                                        <p class="inv-email-address text-center">Restaurant: +88 01406-767067</p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="inv--product-table-section">
+                                                                <div class="table-responsive">
+                                                                    <table class="table">
+                                                                        <thead class="">
+                                                                            <tr>
+                                                                                <th scope="col">S.No</th>
+                                                                                <th class="text-center" scope="col">Name</th>
+                                                                                <th class="text-center" scope="col">Code</th>
+                                                                                <th class="text-center" scope="col">Brand</th>
+                                                                                <th class="text-center" scope="col">Unit</th>
+                                                                                <th class="text-center" scope="col">B.Price</th>
+                                                                                <th class="text-center" scope="col">S.Price</th>
+                                                                                <th class="text-center" scope="col">Stock</th>
+                                                                                <th class="text-center" scope="col">Value</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for item in products %}
+                                                                            <tr>
+                                                                                <td>{{forloop.counter}}</td>
+                                                                                <td class="text-start">{{item.name}}</td>
+                                                                                <td>{{item.code}}</td>
+                                                                                <td>{{item.brand}}</td>
+                                                                                <td class="text-center">{{item.value}}</td>
+                                                                                <td class="text-center">{{item.buy_price}}</td>
+                                                                                <td class="text-center">{{item.sell_price}}</td>
+                                                                                <td class="text-center">{{item.available}}</td>
+                                                                                <td class="text-center">{{item.stock_value}}</td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="inv--note">
+
+                                                                <div class="row mt-4">
+                                                                    <div class="col-sm-12 col-12 order-sm-0 order-1">
+                                                                        <p>Note: All Rights Reserved to Eque Heritage Hotel and Resort. </p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/assets/js/apps/invoice-preview.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window.print();
+        });
+    </script>
+    <script>
+        $(function() {
+            $('#status-form').submit(function(e) {
+                e.preventDefault();
+                var _this = $(this)
+                $('.err-msg').remove();
+                var el = $('<div>')
+                el.addClass("alert alert-danger err-msg")
+                el.hide()
+                if (_this[0].checkValidity() == false) {
+                    _this[0].reportValidity();
+                    return false;
+                }
+
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": '{{csrf_token}}'
+                    },
+                    url: "{% url 'update-sale-status' %}",
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    dataType: 'json',
+                    error: err => {
+                        console.log(err)
+                        alert("An error occured", 'error');
+                        end_loader();
+                    },
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            location.reload()
+                        } else if (resp.status == 'failed' && !!resp.msg) {
+                            el.text(resp.msg)
+                        } else {
+                            el.text("An error occured", 'error');
+                            end_loader();
+                            console.err(resp)
+                        }
+                        _this.prepend(el)
+                        el.show('slow')
+                        $("html, body, .modal").scrollTop(0);
+                        end_loader()
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock pageScripts %}
