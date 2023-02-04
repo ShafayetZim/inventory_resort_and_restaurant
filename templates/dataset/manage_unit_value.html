@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageStyles %}
+    <link href="{% static 'src/assets/css/light/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/scrollspyNav.css' %}" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/dark/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="container">
+                <div class="container">
+
+                    <!-- BREADCRUMB -->
+                    <div class="page-meta">
+                        <nav class="breadcrumb-style-one" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Unit Value</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- /BREADCRUMB -->
+
+                    <div class="row mt-2">
+
+                        <div id="flFormsGrid" class="col-lg-12 layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Add Unit Value</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-content widget-content-area text-center">
+                                    <form action="" id="unit-value-form">
+                                        <input type="hidden" name="id" value="{{unit_value.id}}" />
+                                        <div class="row">
+                                            <div class="col text-start">
+                                                <label for="unit" class="form-label ">Unit Set</label>
+                                                <select id="unit" name="unit" class="form-select form-select-lg">
+                                                    {% if unit_value.unit %}
+                                                    <option selected value="{{unit_value.unit.pk}}">{{unit_value.unit}}</option>
+                                                    {% endif %}
+                                                    <option value="">Choose...</option>
+                                                    {% for item in unit_sets %}
+                                                    <option value="{{item.pk}}">{{item.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col text-start">
+                                                <label for="value" class="form-label">Unit Value</label>
+                                                <input type="text" id="value" name="value" class="form-control" placeholder="Unit Value" aria-label="Unit Value" value="{{unit_value.value}}">
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success mb-2 mt-3 btn-lg">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/plugins/src/highlight/highlight.pack.js' %}"></script>
+    <script src="{% static 'src/assets/js/scrollspyNav.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/tomSelect/tom-select.base.js' %}"></script>
+    <script src="{% static 'src/plugins/src/tomSelect/custom-tom-select.js' %}"></script>
+    <script>
+      $(function () {
+        $("#unit-value-form").submit(function (e) {
+          e.preventDefault();
+          var _this = $(this);
+          $(".err-msg").remove();
+          var el = $("<div>");
+          el.addClass("alert alert-danger err-msg");
+          el.hide();
+          if (_this[0].checkValidity() == false) {
+            _this[0].reportValidity();
+            return false;
+          }
+
+          $.ajax({
+            headers: {
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            url: "{% url 'save-unit-value' %}",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: "POST",
+            type: "POST",
+            dataType: "json",
+            error: (err) => {
+              console.log(err);
+              alert("An error occured", "error");
+              end_loader();
+            },
+            success: function (resp) {
+              if (typeof resp == "object" && resp.status == "success") {
+                location.href = "{% url 'unit-value-page' %}";
+              } else if (resp.status == "failed" && !!resp.msg) {
+                el.text(resp.msg);
+              } else {
+                el.text("An error occured", "error");
+                end_loader();
+                console.err(resp);
+              }
+              _this.prepend(el);
+              el.show("slow");
+              $("html, body, .modal").scrollTop(0);
+              end_loader();
+            },
+          });
+        });
+      });
+    </script>
+    <script>
+        // Select Box
+
+        new TomSelect("#unit",{
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc",
+            }
+        });
+    </script>
+{% endblock pageScripts %}
