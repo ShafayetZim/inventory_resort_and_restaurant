@@ -520,7 +520,7 @@ span.red {
 .form-control:disabled:not(.flatpickr-input), .form-control[readonly]:not(.flatpickr-input) {
   background-color: #f1f2f3;
   cursor: no-drop;
-  color: #d3d3d3;
+  color: #17202A;
 }
 .form-control:disabled:focus, .form-control[readonly]:focus {
   background-color: #f1f2f3;
