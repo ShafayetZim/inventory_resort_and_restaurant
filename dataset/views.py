@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from dataset import models, forms
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Q, Sum
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -475,6 +475,13 @@ def delete_shop(request, pk):
         return redirect('shop-page')
 
 
+def get_products(request):
+    product_id = request.GET.get('product_id')
+    products = models.Product.objects.exclude(id=product_id).all()
+    data = [{'id': p.id, 'name': p.name} for p in products]
+    return JsonResponse(data, safe=False)
+
+
 @login_required()
 def purchase(request):
     context = context_data(request)
@@ -490,10 +497,20 @@ def save_purchase(request):
         post = request.POST
         if not post['id'] == '':
             purchase = models.PurchaseSet.objects.get(id=post['id'])
-            form = forms.SavePurchase(request.POST, instance=purchase)
+
+            form = forms.SavePurchase(request.POST, request.FILES, instance=purchase)
         else:
-            form = forms.SavePurchase(request.POST)
+            form = forms.SavePurchase(request.POST, request.FILES)
+
+            # images = request.FILES.getlist('image')
+            # for image in images:
+            #     models.PurchaseSet.image.create(image=image)
         if form.is_valid():
+            # purchase = form.save()
+            # images = request.FILES.getlist('image')
+            # for image in images:
+            #     purchase.image = image
+            #     purchase.save()
             form.save()
             if post['id'] == '':
                 messages.success(request, "Purchase has been saved successfully.")
@@ -552,6 +569,20 @@ def view_purchase(request, pk=None):
         context['items'] = models.PurchasePayment.objects.filter(purchase__id=pk).all()
 
     return render(request, 'ecommerce/view_purchase.html', context)
+
+
+@login_required()
+def view_voucher(request, pk=None):
+    context = context_data(request)
+    context['title'] = 'View Voucher'
+    context['nav_bar'] = 'view_voucher'
+
+    if pk is None:
+        context['purchase'] = {}
+    else:
+        context['purchase'] = models.PurchaseSet.objects.get(id=pk)
+
+    return render(request, 'ecommerce/view_voucher.html', context)
 
 
 @login_required()
