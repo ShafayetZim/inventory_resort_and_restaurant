@@ -150,14 +150,18 @@ class SavePurchase(forms.ModelForm):
     total_amount = forms.CharField(max_length=10)
     paid = forms.CharField(max_length=10)
     due = forms.CharField(max_length=10)
+    image = forms.FileInput(
+        attrs={'class': 'rounded_list', 'multiple': True}
+    )
     status = forms.CharField(max_length=3)
     shop = forms.Select(
         attrs={'class': 'form-control form-control-sm', 'value': '', 'id': 'id_shop'}
     )
+    date = forms.DateField()
 
     class Meta:
         model = models.PurchaseSet
-        fields = ('code', 'total_amount', 'paid', 'due', 'status', 'shop',)
+        fields = ('code', 'total_amount', 'paid', 'due', 'image', 'status', 'shop', 'date',)
 
     def clean_code(self):
         code = self.cleaned_data['code']
@@ -302,10 +306,11 @@ class SaveSell(forms.ModelForm):
     total_amount = forms.CharField(max_length=10)
     paid = forms.CharField(max_length=10)
     due = forms.CharField(max_length=10)
+    date = forms.DateField()
 
     class Meta:
         model = models.SellSet
-        fields = ('code', 'client', 'status', 'total_amount', 'paid', 'due',)
+        fields = ('code', 'client', 'status', 'total_amount', 'paid', 'due', 'date',)
 
     def clean_code(self):
         code = self.cleaned_data['code']
