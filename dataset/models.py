@@ -161,6 +161,7 @@ class PurchaseSet(models.Model):
     status = models.CharField(max_length=3,
                               choices=(('0', 'Due'), ('1', 'Paid')),
                               default=0)
+    image = models.ImageField(null=True, upload_to='voucher')
     total_amount = models.FloatField(max_length=10)
     paid = models.FloatField(max_length=10)
     due = models.FloatField(max_length=10)
