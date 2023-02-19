@@ -43,8 +43,9 @@
                                     </div>
                                 </div>
                                 <div class="widget-content widget-content-area text-center">
-                                    <form action="" id="purchase-form">
+                                    <form action="" id="purchase-form" enctype='multipart/form-data'>
                                         {% csrf_token %}
+                                        {{ form.media }}
                                         <input type="hidden" name="id" value="{{purchase.id}}" />
                                         <input type="hidden" name="code" value="{% if purchase.code  %}{{purchase.code}}{% else %}generate{% endif %}">
                                         <input type="hidden" name="status" value="{% if purchase.status  %}{{purchase.status}}{% else %}0{% endif %}">
@@ -94,6 +95,17 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <br />
+                                                     <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                            <label for="" class="control-label">Voucher:</label>
+                                                            <input name="image" type="file" class="form-control-file" multiple required value="{% if purchase.image  %}{{purchase.image.url}}{% endif %}">
+                                                        </div>
+                                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                            <label for="" class="control-label">Date</label>
+                                                            <input type="date" value="{{purchase.date|date:'Y-m-d' }}" class="form-control form-control-sm text-center" name="date" required>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -116,6 +128,9 @@
                                                         </div>
                                                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                                             <button class="btn btn-primary btn-sm-0 bg-gradient bg-primary" type="button" id="add_product"><i data-feather="plus-square"></i><span class="icon-name">+</span> Add Product</button>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                            <a href="{% url 'manage-product' %}" target="_blank" class="btn btn-secondary me-4 mt-2">Add New (+)<i data-feather="plus-circle"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="clear-fix mt-2"></div>
@@ -368,19 +383,19 @@
         }
         $(function() {
             calc_total()
-            $('#brand').select2({
+            $('#products').select2({
                 placeholder: "Please Select Brand Here",
                 width: "100%",
                 selectionCssClass: "form-control form-control-sm rounded-0"
             })
-            new TomSelect("#products",{
-                create: false,
-                placeholder: "Please Select Product Here",
-                sortField: {
-                    field: "text",
-                    direction: "asc",
-                }
-            });
+<!--            new TomSelect("#products",{-->
+<!--                create: false,-->
+<!--                placeholder: "Please Select Product Here",-->
+<!--                sortField: {-->
+<!--                    field: "text",-->
+<!--                    direction: "asc",-->
+<!--                }-->
+<!--            });-->
             new TomSelect("#shop",{
                 create: false,
                 placeholder: "Choose Shop",
@@ -404,6 +419,23 @@
                     field: "text",
                     direction: "asc",
                 }
+            });
+
+            // add event listener to product select option
+            const productSelect = document.getElementById('products');
+            productSelect.addEventListener('change', (event) => {
+              const productId = event.target.value;
+
+              // make AJAX request to get updated product list
+              fetch(`/get_products?product_id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                  // update select option with new products
+                  const productOptions = data.map(product => {
+                    return `<option value="${product.id}">${product.name}</option>`;
+                  });
+                  productSelect.innerHTML = productOptions.join('');
+                });
             });
 
             $('#pay_later').click(function() {
@@ -455,6 +487,13 @@
                         calc_total()
                     }
                 })
+                // Add the new product to the select dropdown list
+                var newOption = $('<option>', {
+                    value: pid,
+                    'data-price': buy,
+                    'data-unit': unit
+                }).text(product_name);
+                $('#products').append(newOption);
             })
 
             $('#payment_list tbody').find('[name="pay_price[]"]').on('input change', function() {
@@ -512,6 +551,7 @@
                     processData: false,
                     method: 'POST',
                     type: 'POST',
+                    enctype: 'multipart/form-data',
                     dataType: 'json',
                     error: err => {
                         console.log(err)
@@ -537,6 +577,25 @@
             })
         })
     </script>
+
+<script>
+    // add event listener to product select option
+const productSelect = document.getElementById('product');
+productSelect.addEventListener('change', (event) => {
+  const productId = event.target.value;
+
+  // make AJAX request to get updated product list
+  fetch(`/get_products?product_id=${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      // update select option with new products
+      const productOptions = data.map(product => {
+        return `<option value="${product.id}">${product.name}</option>`;
+      });
+      productSelect.innerHTML = productOptions.join('');
+    });
+});
+</script>
     <!-- END BUSINESS LOGIC SCRIPTS -->
 
 {% endblock pageScripts %}
