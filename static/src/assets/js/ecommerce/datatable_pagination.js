@@ -12,8 +12,8 @@
                "sLengthMenu": "Results :  _MENU_",
             },
             "stripeClasses": [],
-            "lengthMenu": [5, 10, 20, 50],
-            "pageLength": 10
+            "lengthMenu": [10, 30, 50, 100],
+            "pageLength": 30
         });
 
         multiCheck(c3);
