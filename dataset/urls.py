@@ -7,6 +7,7 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('', views.dashboard, name="dashboard"),
+    path('get_products/', views.get_products, name='get_products'),
     # crud urls for authentication
     path('login', views.login_user, name='login'),
     path('logout', views.logout_user, name='logout'),
@@ -63,6 +64,8 @@ urlpatterns = [
     path('delete_purchase/<int:pk>', views.delete_purchase, name='delete-purchase'),
     path('view_purchase', views.view_purchase, name='view-purchase'),
     path('view_purchase/<int:pk>', views.view_purchase, name='view-purchase-pk'),
+    path('view_voucher', views.view_voucher, name='view-voucher'),
+    path('view_voucher/<int:pk>', views.view_voucher, name='view-voucher-pk'),
     # crud urls for payment
     path('payment', views.payment, name='payment-page'),
     path('manage_payment', views.manage_payment, name='manage-payment'),
