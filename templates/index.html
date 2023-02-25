@@ -94,12 +94,35 @@
                         </a>
                     </div>
                     <div class="col">
-                        <a href="#" class="card peach">
+                        <a href="{% url 'client-report' %}" class="card peach">
                           <div class="overlay"></div>
                           <div class="circle">
-                              <p class="text-center">{{product.buy_price}}</p>
+                              <p class="text-center">see report...</p>
                           </div>
-                          <p class="text-center">X</p>
+                          <p class="text-center">Sell Report</p>
+                        </a>
+                    </div>
+                  </div>
+
+                  <div class="row mt-2">
+
+                    <div class="col-3">
+                        <a href="{% url 'purchase-report' %}" class="card brown">
+                             <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">see report...</p>
+                          </div>
+                          <p class="text-center">Purchase Report</p>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a href="{% url 'shop-report' %}" class="card gray">
+                             <div class="overlay"></div>
+                          <div class="circle">
+                              <p class="text-center">see report...</p>
+                          </div>
+                          <p class="text-center">Shop Report</p>
                         </a>
                     </div>
                   </div>
