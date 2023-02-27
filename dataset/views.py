@@ -80,8 +80,15 @@ def brand(request):
     context = context_data(request)
     context['title'] = "Brand"
     context['nav_bar'] = "brand_list"
-    context['brands'] = models.Brand.objects.all()
-    return render(request, 'dataset/brand.html', context)
+    # context['brands'] = models.Brand.objects.all()
+    # return render(request, 'dataset/brand.html', context)
+    user_preferences = request.user.userpreferences
+    if user_preferences.hide_sensitive_content:
+        messages.error(request, 'You are not allowed here.')
+        return render(request, 'authentication/error.html', context)
+    else:
+        context['brands'] = models.Brand.objects.all()
+        return render(request, 'dataset/brand.html', context)
 
 
 def save_brand(request):
@@ -118,6 +125,10 @@ def manage_brand(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Brand'
     context['nav_bar'] = 'manage_brand'
+    if request.user.userpreferences.hide_sensitive_content:
+        # User has hide_sensitive_content checked, show message or redirect
+        messages.error(request, "You are not allowed here.")
+        return redirect('dashboard')  # Replace 'home' with the URL to redirect to
     if pk is None:
         context['brand'] = {}
     else:
@@ -179,6 +190,11 @@ def manage_package(request, pk=None):
     context = context_data(request)
     context['title'] = 'Manage Package'
     context['nav_bar'] = 'manage_package'
+    # Check if the user has the hide_sensitive_content field checked
+    if request.user.userpreferences.hide_sensitive_content:
+        # Render the error template
+        return render(request, 'authentication/error.html', {'message': 'You are not allowed here.'})
+
     if pk is None:
         context['package'] = {}
     else:
@@ -1108,4 +1124,15 @@ class UserUpdateView(UpdateView):
         context["title"] = "User Information"
         context["nav_bar"] = "user_list"
         return context
+
+
+def user_preferences(request):
+    user_preferences, created = models.UserPreferences.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = forms.UserPreferencesForm(request.POST, instance=user_preferences)
+        if form.is_valid():
+            form.save()
+    else:
+        form = forms.UserPreferencesForm(instance=user_preferences)
+    return render(request, 'authentication/user_preferences.html', {'form': form})
 
