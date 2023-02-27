@@ -396,3 +396,25 @@ class UpdateUser(UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email')
+
+
+class UserPreferencesForm(forms.ModelForm):
+    class Meta:
+        model = models.UserPreferences
+        fields = [
+            'user',
+            'receive_notifications',
+            'enable_dark_mode',
+            'hide_sensitive_content',
+            # add more fields here as needed
+        ]
+        widgets = {
+            'receive_notifications': forms.CheckboxInput(),
+            'enable_dark_mode': forms.CheckboxInput(),
+            'hide_sensitive_content': forms.CheckboxInput(),
+            # use CheckboxInput widget for each boolean field
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'].queryset = User.objects.all()
