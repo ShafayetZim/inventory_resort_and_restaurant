@@ -16,6 +16,7 @@ urlpatterns = [
     path('all_user', views.user_list, name="all-users"),
     path('user_delete/<int:id>', views.user_delete, name="user-delete"),
     path('update_user/<int:pk>', views.UserUpdateView.as_view(), name='update_user'),
+    path('preferences', views.user_preferences, name='user_preferences'),
     # crud urls for brand
     path('brand', views.brand, name='brand-page'),
     path('manage_brand', views.manage_brand, name='manage-brand'),
