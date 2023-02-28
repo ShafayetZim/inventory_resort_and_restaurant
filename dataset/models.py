@@ -301,3 +301,14 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+
+class UserPreferences(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userpreferences')
+    receive_notifications = models.BooleanField(default=False)
+    enable_dark_mode = models.BooleanField(default=False)
+    hide_sensitive_content = models.BooleanField(default=False)
+    # add more boolean fields as needed
+
+    def __str__(self):
+        return f"{self.user.username}'s preferences"
+
