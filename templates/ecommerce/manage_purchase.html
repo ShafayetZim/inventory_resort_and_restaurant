@@ -470,7 +470,10 @@
                 tr.find('[name="product_price[]"]').val(buy)
                 tr.find('[name="product_unit[]"]').val(unit)
 
-                $('#product_list tbody').append(tr)
+                tr.removeClass('table-success') // remove success class from previous rows
+                tr.addClass('table-success') // add success class to the new row
+
+                $('#product_list tbody').prepend(tr)
                 calc_total()
                 $('#products').val('').trigger('change')
                 tr.find('[name="product_quantity[]"]').on('input change', function() {
