@@ -311,29 +311,36 @@
             })
 
             $('#add_product').click(function() {
-                var pid = $('#products').val()
-                if (pid < '1') {
-                    return false
-                }
-                var unit = $('#products option[value="' + pid + '"]').attr('data-unit')
-                var buy = $('#products option[value="' + pid + '"]').attr('data-buy')
-                var price = $('#products option[value="' + pid + '"]').attr('data-price')
-                var max = $('#products option[value="' + pid + '"]').attr('data-available')
-                var product_name = $('#products option[value="' + pid + '"]').text()
-                var tr = $($('noscript#product-clone').html()).clone()
-                tr.find('.product_type').text(product_name)
-                tr.find('.product_unit').text(String(unit).toLocaleString('en-US'))
-                tr.find('.product_buy').text(parseFloat(buy).toLocaleString('en-US'))
-                tr.find('.product_price').text(parseFloat(price).toLocaleString('en-US'))
-                tr.find('.product_total').text(parseFloat(price).toLocaleString('en-US'))
-                tr.find('.product_available').text(parseFloat(max).toLocaleString('en-US'))
-                tr.find('[name="product_id[]"]').val(pid)
-                tr.find('[name="product_unit[]"]').val(unit)
-                tr.find('[name="product_price[]"]').val(price)
-                tr.find('[name="product_available[]"]').val(max)
-                tr.find('[name="product_quantity[]"]').val()
+                var product_id = $('#products').val();
+                var product_name = $('#products option:selected').text();
+                var product_unit = $('#products option:selected').data('unit');
+                var product_buy = $('#products option:selected').data('buy');
+                var product_price = $('#products option:selected').data('price');
+                var product_available = $('#products option:selected').data('available');
+                var product_brand = $('#products option:selected').data('brand');
+                var product_quantity = 1;
 
-                $('#product_list tbody').append(tr)
+                // Insert new row at the top of the table
+                var row = '<tr>' +
+                            '<td class="px-2 py-1 align-middle text-center">' +
+                                '<input type="hidden" name="product_id[]" value="' + product_id + '">' +
+                                '<input type="hidden" name="product_unit[]" value="' + product_unit + '">' +
+                                '<button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>' +
+                            '</td>' +
+                            '<td class="px-2 py-1 align-middle product_type">' + product_name + '</td>' +
+                            '<td class="px-2 py-1 align-middle text-center product_unit">' + product_unit + '</td>' +
+                            '<td class="px-2 py-1 align-middle text-center product_buy">' + product_buy + '</td>' +
+                            '<td class="px-2 py-1 align-middle text-end">' +
+                                '<input type="number" step="0.01" name="product_price[]" value="' + product_price + '" class="form-control form-control-sm text-center">' +
+                            '</td>' +
+                            '<td class="px-2 py-1 align-middle text-center product_available">' + product_available + '</td>' +
+                            '<td class="px-2 py-1 align-middle">' +
+                                '<input type="number" min="1" value="' + product_quantity + '" class="form-control form-control-sm text-center" name="product_quantity[]" required>' +
+                            '</td>' +
+                            '<td class="px-2 py-1 align-middle product_total text-end">0.00</td>' +
+                        '</tr>';
+                var tr = $(row);
+                $('#product_list tbody').prepend(tr);
                 calc_total()
                 $('#products').val('').trigger('change')
                 tr.find('[name="product_quantity[]"]').on('input change', function() {
@@ -351,7 +358,8 @@
                         calc_total()
                     }
                 })
-            })
+            });
+
 
 
             $('input[name="total_amount"]').change(function(){
