@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.db.models import Sum
+from django.db.models import Sum, Max
 from datetime import date
 from django.contrib.auth.models import User
 from PIL import Image
@@ -63,6 +63,14 @@ class Product(models.Model):
 
     def __str__(self):
         return str(f"{self.name}")
+
+    @property
+    def last_purchase_price(self):
+        last_purchase_item = self.product_fk.all().order_by('-date', '-id').first()
+        if last_purchase_item:
+            return last_purchase_item.price
+        else:
+            return 0.0
 
     def available(self):
         try:
