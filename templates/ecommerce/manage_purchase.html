@@ -470,6 +470,10 @@
                 tr.find('[name="product_price[]"]').val(buy)
                 tr.find('[name="product_unit[]"]').val(unit)
 
+                if ($('#product_list tbody tr.table-success').length > 0) {
+                    $('#product_list tbody tr.table-success').removeClass('table-success') // remove success class from previous rows
+                }
+
                 tr.removeClass('table-success') // remove success class from previous rows
                 tr.addClass('table-success') // add success class to the new row
 
