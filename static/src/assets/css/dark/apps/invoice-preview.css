@@ -193,6 +193,7 @@ body.dark .invoice .content-section .inv--product-table-section td {
   padding: 10px 25px;
   vertical-align: top !important;
   font-size: 15px;
+  color: black;
 }
 body.dark .invoice .content-section .inv--product-table-section tbody tr {
   border-bottom: 1px solid #191e3a;
