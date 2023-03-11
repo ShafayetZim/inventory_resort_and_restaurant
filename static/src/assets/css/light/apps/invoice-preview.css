@@ -199,7 +199,7 @@
   border-bottom: 1px solid #191e3a;
 }
 .invoice .content-section .inv--product-table-section tbody tr:nth-of-type(even) td {
-  background-color: #f1f2f3 !important;
+  background-color: #d5d8dc !important;
 }
 .invoice .content-section .inv--payment-info {
   font-size: 15px;
@@ -277,6 +277,7 @@
     color: #000000; /* Black in RGB */
     color: 0, 0, 0, 1; /* Black in CMYK */
   }
+
   #ct * {
     visibility: visible;
     color: #000000; /* Black in RGB */
@@ -287,6 +288,18 @@
     left: 0;
     right: 0;
     top: 0;
+  }
+  /* Even rows */
+  .invoice .content-section .inv--product-table-section tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  /* Odd rows */
+  .table tbody tr:nth-child(odd) {
+    background-color: #fff;
+  }
+  table tr {
+    border: 1px solid black;
   }
 }
 @page {
