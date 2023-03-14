@@ -50,8 +50,8 @@
                                         <input type="hidden" name="code" value="{% if purchase.code  %}{{purchase.code}}{% else %}generate{% endif %}">
                                         <input type="hidden" name="status" value="{% if purchase.status  %}{{purchase.status}}{% else %}0{% endif %}">
                                         <input type="hidden" name="total_amount" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">
-                                        <input type="hidden" name="paid" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">
-                                        <input type="hidden" name="due" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">
+<!--                                        <input type="hidden" name="paid" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">-->
+<!--                                        <input type="hidden" name="due" value="{% if purchase.total_amount  %}{{purchase.total_amount}}{% else %}0{% endif %}">-->
 
                                         <div class="card mb-3">
                                             <div class="card-header">
@@ -122,7 +122,7 @@
                                                             <select id="products" class="form-select form-select-lg">
                                                                 <option value="" disabled selected></option>
                                                                 {% for product in products %}
-                                                                <option value="{{product.pk}}" data-price = "{{product.buy_price}}" data-unit="{{product.value}}">{{product.name}}</option>
+                                                                <option value="{{product.pk}}" data-price = "{{product.last_purchase_price}}" data-unit="{{product.value}}">{{product.name}}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
@@ -137,16 +137,18 @@
                                                     <table class="table table-bordered" id="product_list">
                                                         <colgroup>
                                                             <col width="5%">
-                                                            <col width="35%">
+                                                            <col width="30%">
+                                                            <col width="15%">
+                                                            <col width="10%">
                                                             <col width="15%">
                                                             <col width="15%">
-                                                            <col width="15%">
-                                                            <col width="15%">
+                                                            <col width="10%">
                                                         </colgroup>
                                                         <thead>
                                                             <tr>
                                                                 <th class="p-1 text-center"></th>
                                                                 <th class="p-1 text-center">Product Name</th>
+                                                                <th class="p-1 text-center">Note</th>
                                                                 <th class="p-1 text-center">Unit</th>
                                                                 <th class="p-1 text-center">Price</th>
                                                                 <th class="p-1 text-center">Quantity</th>
@@ -162,6 +164,9 @@
                                                                     <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
                                                                 </td>
                                                                 <td class="px-2 py-1 align-middle product_type">{{pitem.product.name}}</td>
+                                                                <td class="px-2 py-1 align-middle">
+                                                                    <input type="text" value="{{pitem.note}}" class="form-control form-control-sm text-center" name="product_note[]">
+                                                                </td>
                                                                 <td class="px-2 py-1 align-middle text-center product_unit">{{pitem.unit_value}}</td>
                                                                 <td class="px-2 py-1 align-middle text-center">
                                                                     <input type="number" step="0.01" name="product_price[]" value="{{pitem.price}}" class="form-control form-control-sm text-center">
@@ -260,10 +265,26 @@
                                             <div class="card-body">
                                                 <div class="d-flex w-100 justify-content-end align-items-center">
                                                     <div class="col-auto">
-                                                        <h4 class="fw-bolder text-muted pe-2">Due Total:</h4>
+                                                        <h4 class="fw-bolder text-muted pe-2">Grand Total:</h4>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
                                                         <h4 class="fw-bolder pe-2 gtotal">{% if purchase.total_amount %}{{purchase.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Discount Amount:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="paid_amount" name="paid" value="{% if purchase.paid %}{{purchase.paid|floatformat:2}}{% else %}0{% endif %}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex w-100 justify-content-end align-items-center">
+                                                    <div class="col-auto">
+                                                        <h4 class="fw-bolder text-muted pe-2">Net Amount:</h4>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="due_amount" name="due" value="{% if purchase.due %}{{purchase.due|floatformat:2}}{% else %}0{% endif %}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -292,6 +313,9 @@
                         <button class="btn btn-outline-danger btn-sm rem-product" type="button"><i data-feather="x"></i><span class="icon-name">x</span></button>
                     </td>
                     <td class="px-2 py-1 align-middle product_type"></td>
+                    <td class="px-2 py-1 align-middle">
+                        <input type="text" class="form-control form-control-sm text-center" name="product_note[]">
+                    </td>
                     <td class="px-2 py-1 align-middle text-center product_unit"></td>
                     <td class="px-2 py-1 align-middle text-center">
                         <input type="number" step="0.01" name="product_price[]" value="" class="form-control form-control-sm text-center">
@@ -379,7 +403,13 @@
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
             }))
-
+            calc_due_amount();
+        }
+        function calc_due_amount() {
+            var total = parseFloat($('[name="total_amount"]').val()) || 0;
+            var paid = parseFloat($('input[name="paid"]').val()) || 0;
+            var due = total - paid;
+            $('#due_amount').val(due.toFixed(2));
         }
         $(function() {
             calc_total()
@@ -442,6 +472,14 @@
 
             })
 
+            $('[name="total_amount"], input[name="paid"]').on('input change', function() {
+                calc_due_amount();
+            });
+
+            $('input[name="paid"]').on('input', function() {
+                calc_due_amount();
+            });
+
             $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
                 calc_total()
             })
@@ -469,6 +507,7 @@
                 tr.find('[name="product_id[]"]').val(pid)
                 tr.find('[name="product_price[]"]').val(buy)
                 tr.find('[name="product_unit[]"]').val(unit)
+                tr.find('[name="product_note[]"]').val()
 
                 if ($('#product_list tbody tr.table-success').length > 0) {
                     $('#product_list tbody tr.table-success').removeClass('table-success') // remove success class from previous rows
@@ -587,9 +626,9 @@
 
 <script>
     // add event listener to product select option
-const productSelect = document.getElementById('product');
-productSelect.addEventListener('change', (event) => {
-  const productId = event.target.value;
+    const productSelect = document.getElementById('product');
+    productSelect.addEventListener('change', (event) => {
+    const productId = event.target.value;
 
   // make AJAX request to get updated product list
   fetch(`/get_products?product_id=${productId}`)
