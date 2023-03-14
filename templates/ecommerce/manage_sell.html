@@ -271,7 +271,17 @@
                 minimumFractionDigits: 2
             }))
 
+            calc_due_amount();
+
         }
+
+        function calc_due_amount() {
+            var total = parseFloat($('[name="total_amount"]').val()) || 0;
+            var paid = parseFloat($('input[name="paid"]').val()) || 0;
+            var due = total - paid;
+            $('#due_amount').val(due.toFixed(2));
+        }
+
         $(function() {
             calc_total()
             // Select Box
@@ -295,6 +305,14 @@
                 width: "100%",
                 selectionCssClass: "form-control form-control-sm rounded-0"
             })
+
+            $('[name="total_amount"], input[name="paid"]').on('input change', function() {
+                calc_due_amount();
+            });
+
+            $('input[name="paid"]').on('input', function() {
+                calc_due_amount();
+            });
 
             $('#product_list tbody').find('[name="product_price[]"]').on('input change', function() {
                 calc_total()
@@ -361,21 +379,6 @@
             });
 
 
-
-            $('input[name="total_amount"]').change(function(){
-                var sub = $(this).val();
-                var paid = $('input[name="paid"]').val();
-                var due = parseFloat(sub) - parseFloat(paid);
-                $('#due_amount').val(due);
-
-            });
-
-             $('input[name="paid"]').on('input',function(){
-                    var paid = $(this).val();
-                    var sub = $('input[name="total_amount"]').val();
-                    var due = parseFloat(sub) - parseFloat(paid);
-                    $('#due_amount').val(due);
-            });
 
             $('#pay_later').click(function() {
                 $('#paid_amount').val(0).attr('required', false)
