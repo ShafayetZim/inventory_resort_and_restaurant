@@ -110,15 +110,21 @@ class Shop(models.Model):
         except:
             purchase = 0
         try:
+            discount = PurchaseSet.objects.filter(shop__id=self.id, status=0).aggregate(Sum('paid'))
+            discount = discount['paid__sum']
+        except:
+            discount = 0
+        try:
             paid = PaymentItem.objects.filter(shop__id=self.id).aggregate(Sum('total_amount'))
             paid = paid['total_amount__sum']
         except:
             paid = 0
 
         purchase = purchase if not purchase is None else 0
+        discount = discount if not discount is None else 0
         paid = paid if not paid is None else 0
 
-        return float(purchase - paid)
+        return float(purchase - discount - paid)
 
     class Meta:
         verbose_name_plural = "Shop"
@@ -203,6 +209,7 @@ class PurchaseSet(models.Model):
 class PurchaseItem(models.Model):
     purchase = models.ForeignKey(PurchaseSet, on_delete=models.CASCADE, related_name="purchase_fk")
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="product_fk")
+    note = models.CharField(max_length=250, blank=True, null=True)
     unit_value = models.CharField(max_length=10)
     price = models.FloatField(max_length=10)
     quantity = models.FloatField(max_length=10)
