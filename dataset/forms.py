@@ -187,13 +187,14 @@ class SavePurchase(forms.ModelForm):
         if 'product_id[]' in self.data:
             for k, val in enumerate(self.data.getlist('product_id[]')):
                 product = models.Product.objects.get(id=val)
+                note = self.data.getlist('product_note[]')[k]
                 unit = self.data.getlist('product_unit[]')[k]
                 price = self.data.getlist('product_price[]')[k]
                 qty = self.data.getlist('product_quantity[]')[k]
                 total = float(price) * float(qty)
 
                 try:
-                    Products.append(models.PurchaseItem(purchase=instance, product=product, unit_value=unit, price=price, quantity=qty, total_amount=total))
+                    Products.append(models.PurchaseItem(purchase=instance, product=product, note=note, unit_value=unit, price=price, quantity=qty, total_amount=total))
                     print("Purchase Products..")
                 except Exception as err:
                     print(err)
