@@ -18,7 +18,28 @@
 
                                 <div class="row">
 
-                                    <div class="col-xl-9">
+                                    <div class="col-xl-12">
+
+                                        <div class="invoice-actions-btn">
+                                            <div class="invoice-action-btn">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-md-3 col-sm-6">
+                                                        <a href="javascript:void(0);" class="btn btn-secondary btn-print action-print">Print</a>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-6">
+                                                        <a href="javascript:void(0);" class="btn btn-success btn-download">Change Status</a>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-6">
+                                                        <a href="{% url 'manage-purchase-pk' purchase.pk %}" class="btn btn-dark btn-edit">Edit</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-xl-12">
 
                                         <div class="invoice-container">
                                             <div class="invoice-inbox">
@@ -56,12 +77,13 @@
                                                             <div class="inv--product-table-section">
                                                                 <div class="table-responsive">
 
-                                                                    <table class="table">
+                                                                    <table class="table table table-striped">
                                                                         <p class="text-center">Item List</p>
                                                                         <thead class="">
                                                                             <tr>
                                                                                 <th scope="col">S.No</th>
                                                                                 <th scope="col">Items</th>
+                                                                                <th scope="col">Note</th>
                                                                                 <th class="text-end" scope="col">Unit</th>
                                                                                 <th class="text-end" scope="col">Qty</th>
                                                                                 <th class="text-end" scope="col">Price</th>
@@ -73,6 +95,11 @@
                                                                             <tr>
                                                                                 <td>{{forloop.counter}}</td>
                                                                                 <td>{{item.product}}</td>
+                                                                                {% if item.note %}
+                                                                                <td>{{item.note}}</td>
+                                                                                {% else %}
+                                                                                <td>N/A</td>
+                                                                                {% endif %}
                                                                                 <td class="text-end">{{item.unit_value}}</td>
                                                                                 <td class="text-end">{{item.quantity}}</td>
                                                                                 <td class="text-end">{{item.price}}</td>
@@ -153,7 +180,7 @@
                                                                                 {% endif %}
 
                                                                                 <div class="col-sm-8 col-7 grand-total-title mt-3">
-                                                                                    <h4 class="">Due Total : </h4>
+                                                                                    <h4 class="">{% if purchase.status == "0" %} Due {% else %} Paid {% endif %} Total: {{ purchase.total }}</h4>
                                                                                 </div>
                                                                                 <div class="col-sm-4 col-5 grand-total-amount mt-3">
                                                                                     <h4 class="">{{purchase.total_amount}} ৳</h4>
@@ -183,26 +210,6 @@
 
                                             </div>
 
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-xl-3">
-
-                                        <div class="invoice-actions-btn">
-                                            <div class="invoice-action-btn">
-                                                <div class="row">
-                                                    <div class="col-xl-12 col-md-3 col-sm-6">
-                                                        <a href="javascript:void(0);" class="btn btn-secondary btn-print action-print">Print</a>
-                                                    </div>
-                                                    <div class="col-xl-12 col-md-3 col-sm-6">
-                                                        <a href="javascript:void(0);" class="btn btn-success btn-download">Change Status</a>
-                                                    </div>
-                                                    <div class="col-xl-12 col-md-3 col-sm-6">
-                                                        <a href="{% url 'manage-purchase-pk' purchase.pk %}" class="btn btn-dark btn-edit">Edit</a>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
 
                                     </div>
