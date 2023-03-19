@@ -98,4 +98,5 @@ urlpatterns = [
     path('client_report', views.client_report, name='client-report'),
     path('shop_report', views.shop_report, name='shop-report'),
     path('purchase_report', views.purchase_report, name='purchase-report'),
+    path('product_report', views.product_report, name='product-report'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
