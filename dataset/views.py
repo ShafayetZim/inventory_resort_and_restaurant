@@ -1023,6 +1023,45 @@ def purchase_report(request):
     return render(request, 'report/purchase_report.html', context)
 
 
+@login_required()
+def product_report(request):
+    context = context_data(request)
+    context['title'] = 'Product Report'
+    context['nav_bar'] = 'product_report'
+    context['products'] = models.Product.objects.all()
+
+    request_data = request.GET
+    check_product = request_data.get("check_product")
+    start_date = request_data.get("start_date")
+    end_date = request_data.get("end_date")
+    product_name = ''
+    product_unit = ''
+
+    product_item = models.PurchaseItem.objects.filter(
+        product=check_product, date__range=[start_date, end_date])
+    if check_product:
+        product_name = models.Product.objects.get(id=check_product).name
+        product_unit = models.Product.objects.get(id=check_product).unit
+
+    context['product_item'] = product_item
+    context['product_name'] = product_name
+    context['product_unit'] = product_unit
+
+    qty = 0
+    total = 0
+    for item in context['product_item']:
+        qty += float(item.quantity)
+        total += float(item.total_amount)
+
+    context['qty'] = qty
+    context['total'] = total
+    context['start_date'] = start_date
+    context['end_date'] = end_date
+    context['check_product'] = check_product
+
+    return render(request, 'report/product_report.html', context)
+
+
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
