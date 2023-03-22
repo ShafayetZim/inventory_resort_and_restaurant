@@ -346,6 +346,15 @@ def product(request):
 
 
 @login_required()
+def product_price(request):
+    context = context_data(request)
+    context['title'] = "Product"
+    context['nav_bar'] = "dashboard"
+    context['products'] = models.Product.objects.all()
+    return render(request, 'product/product_recent_price.html', context)
+
+
+@login_required()
 def print_product(request):
     context = context_data(request)
     context['title'] = "Product"
@@ -1002,11 +1011,11 @@ def purchase_report(request):
     paid = 0
     cash = 0
     for item in context['purchase_due']:
-        due += float(item.total_amount)
+        due += float(item.due)
     for item in context['purchase_paid']:
-        paid += float(item.total_amount)
+        paid += float(item.due)
     for item in context['payment_paid']:
-        cash += float(item.total_amount)
+        cash += float(item.due)
 
     sub_due = due + paid
     sub_paid = paid + cash
