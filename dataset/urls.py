@@ -43,6 +43,7 @@ urlpatterns = [
     path('delete_unit_value/<int:pk>', views.delete_unit_value, name='delete-unit-value'),
     # crud urls for product
     path('product', views.product, name='product-page'),
+    path('product_price', views.product_price, name='product-price'),
     path('product_print', views.print_product, name='product-print'),
     path('manage_product', views.manage_product, name='manage-product'),
     path('manage_product/<int:pk>', views.manage_product, name='manage-product-pk'),
