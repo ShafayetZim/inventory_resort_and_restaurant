@@ -235,7 +235,8 @@
 
             <li class="menu {% if nav_bar == 'purchase_list' or nav_bar == 'manage_purchase' or nav_bar == 'view_purchase' or nav_bar == 'view_voucher' %} active {% endif %}">
               <a
-                href="{% url 'purchase-page' %}"
+                href="#purchase"
+                data-bs-toggle="collapse"
                 aria-expanded="false"
                 class="dropdown-toggle"
               >
@@ -258,9 +259,39 @@
                       d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
                     ></path>
                   </svg>
-                  <span>Purchase</span>
+                  <span>Purchase Set</span>
+                </div>
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-chevron-right"
+                  >
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
                 </div>
               </a>
+              <ul
+                class="collapse submenu list-unstyled {% if nav_bar == 'purchase_list' or nav_bar == 'manage_purchase' or nav_bar == 'view_purchase' or nav_bar == 'view_voucher' %} show {% endif %}"
+                id="purchase"
+                data-bs-parent="#accordionExample"
+              >
+                <li class="{% if nav_bar == 'purchase_list' or nav_bar == 'view_purchase' or nav_bar == 'view_voucher' %} active {% endif %}">
+                  <a href="{% url 'purchase-page' %}"> List </a>
+                </li>
+                {% if request.user.is_superuser %}
+                <li class="{% if nav_bar == 'manage_purchase' %} active {% endif %}">
+                  <a href="{% url 'manage-purchase' %}"> New </a>
+                </li>
+                {% endif %}
+              </ul>
             </li>
 
             <li class="menu {% if nav_bar == 'payment_list' or nav_bar == 'manage_payment' or nav_bar == 'view_payment' %} active {% endif %}">
@@ -408,9 +439,11 @@
                 <li class="{% if nav_bar == 'user_list' %} active {% endif %}">
                   <a href="{% url 'all-users' %}"> List </a>
                 </li>
+                {% if request.user.is_superuser %}
                 <li class="{% if nav_bar == 'new_user' %} active {% endif %}">
                   <a href="{% url 'register' %}"> Add </a>
                 </li>
+                {% endif %}
               </ul>
             </li>
 
