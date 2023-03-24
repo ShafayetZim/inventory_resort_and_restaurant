@@ -139,12 +139,14 @@
                                                     <div class="col-xl-12 col-md-3 col-sm-6">
                                                         <a href="javascript:void(0);" class="btn btn-secondary btn-print action-print">Print</a>
                                                     </div>
+                                                    {% if request.user.is_superuser %}
                                                     <div class="col-xl-12 col-md-3 col-sm-6">
                                                         <a href="javascript:void(0);" class="btn btn-success btn-download">Change Status</a>
                                                     </div>
                                                     <div class="col-xl-12 col-md-3 col-sm-6">
                                                         <a href="{% url 'manage-payment-pk' payment.pk %}" class="btn btn-dark btn-edit">Edit</a>
                                                     </div>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
