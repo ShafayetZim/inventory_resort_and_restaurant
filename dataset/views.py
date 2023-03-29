@@ -1146,7 +1146,7 @@ def user_list(request):
     context = context_data(request)
     context['title'] = 'User List'
     context['nav_bar'] = 'user_list'
-    context['items'] = models.User.objects.filter(is_superuser=False).all().order_by('-id')
+    context['items'] = models.User.objects.filter(is_staff=False).all().order_by('-id')
     return render(request, 'authentication/user_list.html', context)
 
 
