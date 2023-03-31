@@ -26,6 +26,7 @@
                 </nav>
             </div>
             <!-- /BREADCRUMB -->
+
             {% if request.user.is_superuser %}
             <div class="seperator-header">
                 <a href="{% url 'manage-purchase' %}"><button class="btn btn-secondary me-4 mt-2">Add Purchase (+)<i data-feather="plus-circle"></i></button></a>
