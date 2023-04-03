@@ -365,6 +365,10 @@ def print_product(request):
     context['title'] = "Product"
     context['nav_bar'] = "product_list"
     context['products'] = models.Product.objects.all()
+    stock_value = 0
+    for item in context['products']:
+        stock_value += item.available() * item.last_purchase_price
+    context['total_stock_value'] = stock_value
     return render(request, 'product/print_product.html', context)
 
 
