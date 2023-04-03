@@ -73,8 +73,8 @@
                                                                                 <td class="text-center">{{item.value}}</td>
                                                                                 <td class="text-center">{{item.buy_price}}</td>
                                                                                 <td class="text-center">{{item.sell_price}}</td>
-                                                                                <td class="text-center">{{item.available}}</td>
-                                                                                <td class="text-center">{{item.stock_value}}</td>
+                                                                                <td class="text-center">{{item.available|floatformat:2}}</td>
+                                                                                <td class="text-center">{{item.stock_value|floatformat:2}}</td>
                                                                             </tr>
                                                                         {% endfor %}
                                                                         </tbody>
