@@ -42,6 +42,11 @@ def dashboard(request):
         available += item.available()
     context['available'] = available
 
+    stock_value = 0
+    for item in context['stock']:
+        stock_value += item.available() * item.last_purchase_price
+    context['stock_value'] = stock_value
+
     context['low_stock'] = models.Product.objects.all()
     count = 0
     for item in context['low_stock']:
@@ -1015,7 +1020,7 @@ def purchase_report(request):
     for item in context['purchase_paid']:
         paid += float(item.due)
     for item in context['payment_paid']:
-        cash += float(item.due)
+        cash += float(item.amount)
 
     sub_due = due + paid
     sub_paid = paid + cash
