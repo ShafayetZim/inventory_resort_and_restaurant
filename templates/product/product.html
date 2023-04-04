@@ -72,8 +72,8 @@
                                         <td>{{ item.last_purchase_price }}</td>
                                         <td>{{ item.buy_price }}</td>
                                         <td>{{ item.sell_price }}</td>
-                                        <td>{{ item.available }}</td>
-                                        <td>{{ item.stock_value }}</td>
+                                        <td>{{ item.available|floatformat:2 }}</td>
+                                        <td>{{ item.stock_value|floatformat:2 }}</td>
                                         <td class="text-center">
                                             <ul class="table-controls">
                                                 <li><a href="{% url 'view-product-pk' item.pk %}" class="bs-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="View" data-original-title="View"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 mb-1"><path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a></li>
