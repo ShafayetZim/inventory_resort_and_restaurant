@@ -352,7 +352,8 @@
 
             <li class="menu {% if nav_bar == 'sell_list' or nav_bar == 'manage_sell' or nav_bar == 'view_sell' %} active {% endif %}">
               <a
-                href="{% url 'sell-page' %}"
+                href="#sell"
+                data-bs-toggle="collapse"
                 aria-expanded="false"
                 class="dropdown-toggle"
               >
@@ -368,9 +369,39 @@
                       <path d="M9.5 17c.413.462 1 1 2.5 1s2.5-.897 2.5-2s-1-1.5-2.5-2s-2-1.47-2-2c0-1.104 1-2 2-2s1.5 0 2.5 1"/>
                     </g>
                   </svg>
-                  <span>Sell</span>
+                  <span>Sell Set</span>
+                </div>
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-chevron-right"
+                  >
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
                 </div>
               </a>
+              <ul
+                class="collapse submenu list-unstyled {% if nav_bar == 'sell_list' or nav_bar == 'manage_sell' or nav_bar == 'view_sell' %} show {% endif %}"
+                id="sell"
+                data-bs-parent="#accordionExample"
+              >
+                <li class="{% if nav_bar == 'sell_list' or nav_bar == 'view_sell' %} active {% endif %}">
+                  <a href="{% url 'sell-page' %}"> List </a>
+                </li>
+                {% if request.user.is_superuser %}
+                <li class="{% if nav_bar == 'manage_sell' %} active {% endif %}">
+                  <a href="{% url 'manage-sell' %}"> New </a>
+                </li>
+                {% endif %}
+              </ul>
             </li>
 
             <li class="menu menu-heading">
