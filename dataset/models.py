@@ -90,7 +90,7 @@ class Product(models.Model):
         return float(stockin - stockout)
 
     def stock_value(self):
-        value = self.available() * self.buy_price
+        value = self.available() * self.last_purchase_price
         return value
 
     class Meta:
