@@ -217,7 +217,7 @@ class PurchaseItem(models.Model):
     date = models.DateField(default=date.today)
 
     def __str__(self):
-        return str(f"{self.purchase.code} - {self.product.name}")
+        return str(f"{self.purchase.code}")
 
     class Meta:
         verbose_name_plural = "Purchase Item"
@@ -282,7 +282,7 @@ class SellItem(models.Model):
     date = models.DateField(default=date.today)
 
     def __str__(self):
-        return str(f"{self.sell.code} - {self.product.name}")
+        return str(f"{self.sell.code}")
 
     class Meta:
         verbose_name_plural = "Sell Item"
