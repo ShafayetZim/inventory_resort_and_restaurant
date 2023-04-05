@@ -208,7 +208,7 @@ class PurchaseSet(models.Model):
 
 class PurchaseItem(models.Model):
     purchase = models.ForeignKey(PurchaseSet, on_delete=models.CASCADE, related_name="purchase_fk")
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="product_fk", null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name="product_fk", null=True)
     note = models.CharField(max_length=250, blank=True, null=True)
     unit_value = models.CharField(max_length=10)
     price = models.FloatField(max_length=10)
@@ -274,7 +274,7 @@ class SellSet(models.Model):
 
 class SellItem(models.Model):
     sell = models.ForeignKey(SellSet, on_delete=models.CASCADE, related_name="sell_fk")
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="product_fk2", null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name="product_fk2", null=True)
     unit_value = models.CharField(max_length=10)
     price = models.FloatField(max_length=10)
     quantity = models.FloatField(max_length=10)
