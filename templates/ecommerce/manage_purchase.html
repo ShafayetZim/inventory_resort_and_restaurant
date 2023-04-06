@@ -276,15 +276,16 @@
                                                         <h4 class="fw-bolder text-muted pe-2">Discount Amount:</h4>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
-                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="paid_amount" name="paid" value="{% if purchase.paid %}{{purchase.paid|floatformat:2}}{% else %}0{% endif %}" required>
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="discount_amount" name="discount" value="{% if purchase.discount %}{{purchase.discount|floatformat:2}}{% else %}0{% endif %}" required>
                                                     </div>
                                                 </div>
+
                                                 <div class="d-flex w-100 justify-content-end align-items-center">
                                                     <div class="col-auto">
                                                         <h4 class="fw-bolder text-muted pe-2">Net Amount:</h4>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
-                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="due_amount" name="due" value="{% if purchase.due %}{{purchase.due|floatformat:2}}{% else %}0{% endif %}" required>
+                                                        <input type="number" step="any" class="form-control form-control-sm text-end" id="net_amount" name="net" value="{% if purchase.net %}{{purchase.net|floatformat:2}}{% else %}0{% endif %}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -403,13 +404,13 @@
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
             }))
-            calc_due_amount();
+            calc_net_amount();
         }
-        function calc_due_amount() {
+        function calc_net_amount() {
             var total = parseFloat($('[name="total_amount"]').val()) || 0;
-            var paid = parseFloat($('input[name="paid"]').val()) || 0;
-            var due = total - paid;
-            $('#due_amount').val(due.toFixed(2));
+            var discount = parseFloat($('input[name="discount"]').val()) || 0;
+            var net = total - discount;
+            $('#net_amount').val(net.toFixed(2));
         }
         $(function() {
             calc_total()
@@ -472,12 +473,12 @@
 
             })
 
-            $('[name="total_amount"], input[name="paid"]').on('input change', function() {
-                calc_due_amount();
+            $('[name="total_amount"], input[name="discount"]').on('input change', function() {
+                calc_net_amount();
             });
 
-            $('input[name="paid"]').on('input', function() {
-                calc_due_amount();
+            $('input[name="discount"]').on('input', function() {
+                calc_net_amount();
             });
 
             $('#product_list tbody').find('[name="product_quantity[]"]').on('input change', function() {
