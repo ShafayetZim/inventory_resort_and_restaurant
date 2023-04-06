@@ -100,4 +100,5 @@ urlpatterns = [
     path('shop_report', views.shop_report, name='shop-report'),
     path('purchase_report', views.purchase_report, name='purchase-report'),
     path('product_report', views.product_report, name='product-report'),
+    path('stock_report', views.stock_report, name='stock-report'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
