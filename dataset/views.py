@@ -919,7 +919,7 @@ def stock_report(request):
     stock_value = 0
     for product in products:
         last_purchase_item = models.PurchaseItem.objects.filter(product=product).order_by('-date','-id').first()
-        product.last_price = last_purchase_item.price if last_purchase_item is not None else product.price
+        product.last_price = last_purchase_item.price if last_purchase_item is not None else product.buy_price
 
         purchases = models.PurchaseItem.objects.filter(product=product)
         if end_date:
@@ -943,13 +943,12 @@ def stock_report(request):
     return render(request, 'report/filter_report.html', context)
 
 
-
 @login_required()
 def client_report(request):
     context = context_data(request)
     context['title'] = 'Client Report'
     context['nav_bar'] = 'client_report'
-    context['client'] = models.Client.objects.all()
+    context['clients'] = models.Client.objects.all()
 
     request_data = request.GET
     check_client = request_data.get("check_client")
@@ -957,6 +956,9 @@ def client_report(request):
     end_date = request_data.get("end_date")
 
     if check_client != "All":
+        client = models.Client.objects.get(id=check_client)
+        client_name = client.name
+
         sell = models.SellSet.objects.filter(client=check_client, date__range=[start_date, end_date])
         items = models.SellItem.objects.filter(sell__in=sell).values(
             'product', 'product__name', 'unit_value', 'price').annotate(
@@ -972,7 +974,7 @@ def client_report(request):
     context['start_date'] = start_date
     context['end_date'] = end_date
     context['check_client'] = check_client
-    print(check_client)
+    context['client_name'] = client_name if check_client != "All" else "All"
 
     return render(request, 'report/client_report.html', context)
 
