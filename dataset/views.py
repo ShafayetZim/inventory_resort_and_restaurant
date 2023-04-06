@@ -905,29 +905,6 @@ def low_stock(request):
     context['pitems'] = models.Product.objects.all()
     return render(request, 'report/low_stock.html', context)
 
-from django.utils import timezone
-@login_required()
-def filter_report2(request):
-    context = context_data(request)
-    context['title'] = 'filter Report'
-    context['nav_bar'] = 'filter_report'
-    context['products'] = models.Product.objects.all()
-
-    request_data = request.GET
-    end_date_str = request.GET.get('end_date')
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else timezone.now().date()
-
-    for product in context['products']:
-        product.last_purchase_price1 = models.PurchaseItem.objects.filter(product=product, date__lte=end_date).order_by('-date',
-                                                                                                                '-id').values_list(
-            'price', flat=True).first() or 0.0
-        product.stock1 = product.available1() if product.available1() > 0 else 0.0
-        product.stock_value = product.stock1 * product.last_purchase_price1
-
-    context['end_date'] = end_date_str or datetime.now().strftime('%Y-%m-%d')
-
-    return render(request, 'report/filter_report.html', context)
-
 
 @login_required()
 def stock_report(request):
