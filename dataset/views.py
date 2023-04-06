@@ -905,6 +905,67 @@ def low_stock(request):
     context['pitems'] = models.Product.objects.all()
     return render(request, 'report/low_stock.html', context)
 
+from django.utils import timezone
+@login_required()
+def filter_report2(request):
+    context = context_data(request)
+    context['title'] = 'filter Report'
+    context['nav_bar'] = 'filter_report'
+    context['products'] = models.Product.objects.all()
+
+    request_data = request.GET
+    end_date_str = request.GET.get('end_date')
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else timezone.now().date()
+
+    for product in context['products']:
+        product.last_purchase_price1 = models.PurchaseItem.objects.filter(product=product, date__lte=end_date).order_by('-date',
+                                                                                                                '-id').values_list(
+            'price', flat=True).first() or 0.0
+        product.stock1 = product.available1() if product.available1() > 0 else 0.0
+        product.stock_value = product.stock1 * product.last_purchase_price1
+
+    context['end_date'] = end_date_str or datetime.now().strftime('%Y-%m-%d')
+
+    return render(request, 'report/filter_report.html', context)
+
+
+@login_required()
+def stock_report(request):
+    context = context_data(request)
+    context['title'] = 'filter Report'
+    context['nav_bar'] = 'filter_report'
+    products = models.Product.objects.all()
+
+    request_data = request.GET
+    end_date = request_data.get("end_date")
+
+    stock_value = 0
+    for product in products:
+        last_purchase_item = models.PurchaseItem.objects.filter(product=product).order_by('-date','-id').first()
+        product.last_price = last_purchase_item.price if last_purchase_item is not None else product.price
+
+        purchases = models.PurchaseItem.objects.filter(product=product)
+        if end_date:
+            purchases = purchases.filter(date__lte=end_date)
+        product.stockin = purchases.aggregate(Sum('quantity'))['quantity__sum'] or 0
+
+        sell_items = models.SellItem.objects.filter(product=product)
+        if end_date:
+            sell_items = sell_items.filter(date__lte=end_date)
+        product.stockout = sell_items.aggregate(Sum('quantity'))['quantity__sum'] or 0
+
+        product.stock = product.stockin - product.stockout
+        stock_value += product.stock * product.last_price
+
+    print("stock value: ", stock_value)
+
+    context['end_date'] = end_date
+    context['stock_value'] = stock_value
+    context['products'] = products
+
+    return render(request, 'report/filter_report.html', context)
+
+
 
 @login_required()
 def client_report(request):
