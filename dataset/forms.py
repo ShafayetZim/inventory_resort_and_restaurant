@@ -148,8 +148,9 @@ class SaveShop(forms.ModelForm):
 class SavePurchase(forms.ModelForm):
     code = forms.CharField(max_length=50)
     total_amount = forms.CharField(max_length=10)
-    paid = forms.CharField(max_length=10)
-    due = forms.CharField(max_length=10)
+    discount = forms.CharField(max_length=10)
+    cost = forms.CharField(max_length=10)
+    net = forms.CharField(max_length=10)
     image = forms.FileInput(
         attrs={'class': 'rounded_list', 'multiple': True}
     )
@@ -161,7 +162,7 @@ class SavePurchase(forms.ModelForm):
 
     class Meta:
         model = models.PurchaseSet
-        fields = ('code', 'total_amount', 'paid', 'due', 'image', 'status', 'shop', 'date',)
+        fields = ('code', 'total_amount', 'discount', 'cost', 'net', 'image', 'status', 'shop', 'date',)
 
     def clean_code(self):
         code = self.cleaned_data['code']
