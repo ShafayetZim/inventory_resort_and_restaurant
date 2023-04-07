@@ -51,7 +51,7 @@
                                                     <select class="form-control form-control-lg" id="check_client" name="check_client">
                                                         <option disabled selected value="">Select Client</option>
                                                         <option value="All">All</option>
-                                                        {% for item in client %}
+                                                        {% for item in clients %}
                                                         <option value="{{item.pk}}">{{item.name}}</option>
                                                         {% endfor %}
                                                     </select>
@@ -109,6 +109,7 @@
 
                                                             <div class="inv--product-table-section">
                                                                 <div class="table-responsive">
+                                                                    <h6 class="text-center">Sales Report for <b>{{client_name}}</b> from {{start_date}} to {{end_date}}</h6>
                                                                     <table class="table">
                                                                         <thead class="">
                                                                             <tr>
