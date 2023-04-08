@@ -955,10 +955,17 @@ def client_report(request):
     start_date = request_data.get("start_date")
     end_date = request_data.get("end_date")
 
-    if check_client != "All":
-        client = models.Client.objects.get(id=check_client)
-        client_name = client.name
+    # set client_name based on the selected client
+    if check_client:
+        if check_client == 'All':
+            client_name = 'All'
+        else:
+            client = models.Client.objects.get(pk=check_client)
+            client_name = client.name
+    else:
+        client_name = 'None'
 
+    if check_client != "All":
         sell = models.SellSet.objects.filter(client=check_client, date__range=[start_date, end_date])
         items = models.SellItem.objects.filter(sell__in=sell).values(
             'product', 'product__name', 'unit_value', 'price').annotate(
@@ -974,7 +981,8 @@ def client_report(request):
     context['start_date'] = start_date
     context['end_date'] = end_date
     context['check_client'] = check_client
-    context['client_name'] = client_name if check_client != "All" else "All"
+    context['client_name'] = client_name
+    # context['client_name'] = client_name if check_client != "All" else "All"
 
     return render(request, 'report/client_report.html', context)
 
