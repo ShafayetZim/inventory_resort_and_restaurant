@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageStyles %}
+    <link href="{% static 'src/assets/css/light/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'src/assets/css/dark/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/src/tomSelect/tom-select.default.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'src/plugins/css/light/tomSelect/custom-tomSelect.css' %}">
+{% endblock pageStyles %}
+
+{% block content %}
+            <div class="layout-px-spacing">
+
+                <div class="middle-content container-xxl p-0">
+
+                    <div class="card mb-3">
+                        <div class="card-header py-1">
+                            <div class="card-title mb-0 text-center">Filter Stock Report</div>
+                        </div>
+                        <div class="card-body">
+
+                            <form method="GET">
+                                <section class="site_filter">
+                                    <div class="container-fluid">
+                                        <div class="row justify-content-center">
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="date">End Date</label>
+                                                    <input type="date" class="form-control mr-sm-3" id="end_date" name="end_date"
+                                                           value={{end_date}} required>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-success">View</button>
+<!--                                    <a href="javascript:void(0);" class="btn btn-secondary btn-print  action-print">Print</a>-->
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row invoice layout-top-spacing layout-spacing">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                            <div class="doc-container">
+
+                                <div class="row">
+
+                                    <div class="col-xl-12">
+
+                                        <div class="invoice-container">
+                                            <div class="invoice-inbox">
+
+                                                <div id="ct" class="">
+
+                                                    <div class="invoice-00001">
+                                                        <div class="content-section">
+
+                                                            <div class="inv--product-table-section">
+                                                                <div class="table-responsive">
+                                                                    <table class="table">
+                                                                        <tfoot>
+                                                                            <tr>
+<!--                                                                                <th colspan="3" class="text-end">Total Quantity</th>-->
+<!--                                                                                <th class="text-start fw-bolder">-->
+<!--                                                                                    <input type="text" class="form-control form-control-sm text-center" name="total_qty" id="total_qty" value="" readonly>-->
+<!--                                                                                </th>-->
+                                                                                <th class="text-end">Total Stock Amount</th>
+                                                                                <th class="text-start fw-bolder">
+                                                                                    <input type="text" class="form-control form-control-sm text-center" name="total_amt" id="total_amt" value="{{stock_value}}" readonly>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="inv--note">
+
+                                                                <div class="row mt-4">
+                                                                    <div class="col-sm-12 col-12 order-sm-0 order-1">
+                                                                        <p>Note: All Rights Reserved to Eque Heritage Hotel and Resort. </p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+{% endblock content %}
+
+{% block pageScripts %}
+    <script src="{% static 'src/assets/js/apps/invoice-preview.js' %}"></script>
+
+    <script src="{% static 'src/plugins/src/tomSelect/tom-select.base.js' %}"></script>
+    <script src="{% static 'src/plugins/src/tomSelect/custom-tom-select.js' %}"></script>
+{% endblock pageScripts %}
