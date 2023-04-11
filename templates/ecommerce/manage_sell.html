@@ -338,6 +338,11 @@
                 var product_brand = $('#products option:selected').data('brand');
                 var product_quantity = 1;
 
+                if (product_available <= 0) {
+                    alert("This product is out of stock");
+                    return false;
+                }
+
                 // Insert new row at the top of the table
                 var row = '<tr>' +
                             '<td class="px-2 py-1 align-middle text-center">' +
